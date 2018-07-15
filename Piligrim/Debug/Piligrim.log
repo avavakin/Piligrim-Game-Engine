@@ -1,0 +1,6 @@
+﻿  main.cpp
+c:\users\arkady\desktop\graphics\piligrim\piligrim\src\graphics\window.h(2): warning C4005: GLEW_STATIC: изменение макроопределения
+  c:\users\arkady\desktop\graphics\piligrim\piligrim\src\graphics\window.h(2): note: аргументы командной строки:  см. предыдущее определение "GLEW_STATIC"
+c:\users\arkady\desktop\graphics\piligrim\piligrim\main.cpp(83): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  Piligrim.vcxproj -> C:\Users\Arkady\Desktop\Graphics\Piligrim\Debug\Piligrim.exe
+  Piligrim.vcxproj -> C:\Users\Arkady\Desktop\Graphics\Piligrim\Debug\Piligrim.pdb (Partial PDB)
