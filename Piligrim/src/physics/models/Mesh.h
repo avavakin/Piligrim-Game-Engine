@@ -1,5 +1,8 @@
 #pragma once
 #include "../../math/math.h"
+#include "../../graphics/scenegraph/isceneobject.h"
+#include "../../graphics/buffers/vertexarray.h"
+#include "../../graphics/buffers/buffer.h"
 #include <vector>
 namespace piligrim {
 	namespace physics {
@@ -54,7 +57,8 @@ namespace piligrim {
 			void clear() { indecies.clear(); }
 		};
 
-		class Mesh {
+		class Mesh : graphics::ISceneObject 
+		{
 		private:
 			float* points = nullptr;
 			unsigned int pointsCount;
@@ -90,21 +94,21 @@ namespace piligrim {
 				clearIndecies();
 			}
 
-			math::vec3 getPoint(unsigned int id) const { return math::vec3(points[id*3], points[id*3+1], points[id*3+2]); }
-			unsigned int getIndex(unsigned int id) const { return indecies[id]; }
+			inline math::vec3 getPoint(unsigned int id) const { return math::vec3(points[id*3], points[id*3+1], points[id*3+2]); }
+			inline unsigned int getIndex(unsigned int id) const { return indecies[id]; }
 
-			unsigned int getCountPoints() const { return pointsCount; }
-			unsigned int getCountIndecies() const { return indeciesCount; }
+			inline unsigned int getCountPoints() const { return pointsCount; }
+			inline unsigned int getCountIndecies() const { return indeciesCount; }
 
-			float* const & getLocalPoints() const {
+			inline float* const & getLocalPoints() const {
 				return points;
 			}
-			unsigned int* const & getIndecies() const 
+			inline unsigned int* const & getIndecies() const
 			{
 				return indecies;
 			}
 
-			void clearPoints() 
+			inline void clearPoints()
 			{ 
 				if (points != nullptr)
 				{
@@ -112,7 +116,7 @@ namespace piligrim {
 					points = nullptr;
 				}
 			}
-			void clearIndecies() 
+			inline void clearIndecies()
 			{ 
 				if (indecies != nullptr)
 				{
@@ -121,7 +125,10 @@ namespace piligrim {
 				}
 			}
 
-			math::vec3 getPosition() const { return center; }
+			void applyMatrix(math::mat4 matr);
+			void draw();
+
+			inline math::vec3 getPosition() const { return center; }
 
 			friend Mesh operator +(const Mesh& figure, const math::vec3& vec);
 			friend Mesh operator -(const Mesh& figure, const math::vec3& vec);
@@ -141,6 +148,13 @@ namespace piligrim {
 					center += math::vec3(points[id*3], points[id*3+1], points[id*3+2]);
 				}
 				center /= pointsCount;
+			}
+
+			inline graphics::VertexArray buildVAO()
+			{
+				graphics::VertexArray result;
+				result.addBuffer(new graphics::Buffer(points, pointsCount * 3, 3), 0);
+				return result;
 			}
 		};
 

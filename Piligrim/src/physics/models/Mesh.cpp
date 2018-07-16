@@ -66,6 +66,16 @@ namespace piligrim {
 			return result;
 		}
 
+		void Mesh::applyMatrix(math::mat4 matr)
+		{
+			*this *= matr;
+		}
+
+		void Mesh::draw()
+		{
+			graphics::VertexArray sprite = buildVAO();
+		}
+
 		Mesh & Mesh::operator+=(const math::vec3 & vec)
 		{
 			*this = *this + vec;

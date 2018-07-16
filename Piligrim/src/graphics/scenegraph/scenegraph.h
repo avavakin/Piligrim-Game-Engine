@@ -1,15 +1,18 @@
 #pragma once
 #include <vector>
-#include "sceneobject.h"
+#include "isceneobject.h"
 namespace piligrim {
 	namespace graphics {
 
-		class SceneGraph : SceneObject
+		class SceneGraph : public ISceneObject
 		{
 		private:
-			std::vector<SceneObject> objects;
+			std::vector<ISceneObject> objects;
 		public:
 			void applyMatrix(math::mat4 matr);
+			void addObject(const ISceneObject &object);
+			void clearScene();
+			void draw();
 		};
 
 	}
