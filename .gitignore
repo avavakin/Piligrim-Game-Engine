@@ -1,2 +1,8 @@
-Piligrim.sln
 .vs
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.exe
+Debug
+Release
