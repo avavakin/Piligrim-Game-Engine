@@ -1,4 +1,5 @@
 #pragma once
+/*
 #include <vector>
 #include "isceneobject.h"
 namespace piligrim {
@@ -17,3 +18,4 @@ namespace piligrim {
 
 	}
 }
+*/

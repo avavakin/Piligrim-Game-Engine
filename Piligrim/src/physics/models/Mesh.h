@@ -57,7 +57,7 @@ namespace piligrim {
 			void clear() { indecies.clear(); }
 		};
 
-		class Mesh : graphics::ISceneObject 
+		class Mesh //: graphics::ISceneObject 
 		{
 		private:
 			float* points = nullptr;

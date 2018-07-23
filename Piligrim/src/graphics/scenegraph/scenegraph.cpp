@@ -1,5 +1,5 @@
 #include "scenegraph.h"
-
+/*
 void piligrim::graphics::SceneGraph::applyMatrix(math::mat4 matr)
 {
 	for (auto& object : objects)
@@ -25,3 +25,4 @@ void piligrim::graphics::SceneGraph::draw()
 		object.draw();
 	}
 }
+*/

@@ -1,4 +1,5 @@
 #pragma once
+/*
 #include "../../math/mat4.h"
 #include "../renderer/idrawable.h"
 namespace piligrim {
@@ -11,3 +12,4 @@ namespace piligrim {
 		};
 	}
 }
+*/

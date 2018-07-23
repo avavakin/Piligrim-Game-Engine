@@ -17,11 +17,9 @@ int main()
 	using namespace graphics;
 	using namespace math;
 	using namespace physics;
-	
 
 	Window window("Scott Piligrim vs. World!", WINDOW_WIDTH, WINDOW_HIGHT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
 	float xMarg = 0, yMarg = 0;
 
 	float pointsSource[] =
