@@ -25,9 +25,9 @@ int main()
 	float pointsSource[] =
 	{
 		0 + xMarg, 0 + yMarg, 0,
-		3 + xMarg, 0 + yMarg, 0,
-		0 + xMarg, 3 + yMarg, 0,
-		3 + xMarg, 3 + yMarg, 0
+		0.5 + xMarg, 0 + yMarg, 0,
+		0 + xMarg, 0.5 + yMarg, 0,
+		0.5 + xMarg, 0.5 + yMarg, 0
 	};
 
 	unsigned int indeciesSource[] =
@@ -36,8 +36,8 @@ int main()
 		2, 3, 1
 	};
 		
-	Mesh figureOne(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { 0.5, 3, 0 });
-	Mesh figureTwo(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { 3.75, 3, 0});
+	Mesh figureOne(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { -.25f, 0.f, -0.2f });
+	Mesh figureTwo(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { 3.75f, 3.f, 1.f});
 
 
 	float * const coords = figureOne.getLocalPoints();
@@ -64,8 +64,10 @@ int main()
 	shader.enable();
 
 	mat4 ortho = mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+	mat4 persp = mat4::perspective(45.0f, static_cast<float>(WINDOW_WIDTH)/WINDOW_HIGHT, 0.1f, 100.0f);
 
-	shader.setUniform("u_pr_matrix", ortho);
+	shader.setUniform("u_pr_matrix", persp);
+	shader.setUniform("u_vw_matrix", mat4::rotation({1.f,0.f,0.f}, -55.f));
 
 	shader.setUniform("u_color", vec4(0, 1, 0, 1));
 	shader.setUniform("u_light_pos", vec2(0,0));
@@ -78,7 +80,9 @@ int main()
 		if (window.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1))
 		{
 			window.getMousePosition(x, y);
-			shader.setUniform("u_light_pos", vec2(x/WINDOW_WIDTH*16, y/WINDOW_HIGHT*9));
+			LOG(x << " == " << y);
+			shader.setUniform("u_light_pos", vec2(2*x/WINDOW_WIDTH-1, -2*y/WINDOW_HIGHT+1));
+			LOG(2 * x / WINDOW_WIDTH - 1 << " -- " << -2 * y / WINDOW_HIGHT + 1);
 		}
 		shader.enable();
 		//shader.setUniform("u_ml_matrix", mat4::rotation({ 0,0,1 }, i));
@@ -90,14 +94,14 @@ int main()
 		glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_INT, 0);
 		ibo.bind();
 		spriteOne.unbind();
-
+		/*
 		spriteTwo.bind();
 		ibo.bind();
 		shader.setUniform("u_ml_matrix", mat4::translation(figureTwo.getPosition()));
 		glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_INT, 0);
 		ibo.bind();
 		spriteTwo.unbind();
-
+		*/
 		window.update();
 	}
 
