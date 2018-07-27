@@ -7,6 +7,7 @@
 #include "src\utils\fileutils.h"
 
 #include "src\graphics\buffers\buffers.h"
+#include "src\graphics\renderer\camera\camera.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HIGHT (WINDOW_WIDTH * 9 / 16)
@@ -24,9 +25,9 @@ int main()
 
 	float pointsSource[] =
 	{
-		0 + xMarg, 0 + yMarg, 0,
-		0.5 + xMarg, 0 + yMarg, 0,
-		0 + xMarg, 0.5 + yMarg, 0,
+		-.5 + xMarg, -.5 + yMarg, 0,
+		0.5 + xMarg, -.5 + yMarg, 0,
+		-.5 + xMarg, 0.5 + yMarg, 0,
 		0.5 + xMarg, 0.5 + yMarg, 0
 	};
 
@@ -36,7 +37,7 @@ int main()
 		2, 3, 1
 	};
 		
-	Mesh figureOne(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { -.25f, 0.f, -0.2f });
+	Mesh figureOne(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { -.5f, 0.f, 0.0f });
 	Mesh figureTwo(pointsSource, sizeof(pointsSource) / sizeof(float) / 3, indeciesSource, sizeof(indeciesSource) / sizeof(unsigned int), { 3.75f, 3.f, 1.f});
 
 
@@ -67,11 +68,10 @@ int main()
 	mat4 persp = mat4::perspective(45.0f, static_cast<float>(WINDOW_WIDTH)/WINDOW_HIGHT, 0.1f, 100.0f);
 
 	shader.setUniform("u_pr_matrix", persp);
-	shader.setUniform("u_vw_matrix", mat4::rotation({1.f,0.f,0.f}, -55.f));
 
-	shader.setUniform("u_color", vec4(0, 1, 0, 1));
-	shader.setUniform("u_light_pos", vec2(0,0));
+	shader.setUniform("u_color", vec4(0.2, 0.8, 0.2, 1));
 	// Shader END
+	Camera cam;
 
 	while (!window.closed())
 	{
@@ -80,28 +80,23 @@ int main()
 		if (window.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1))
 		{
 			window.getMousePosition(x, y);
-			LOG(x << " == " << y);
-			shader.setUniform("u_light_pos", vec2(2*x/WINDOW_WIDTH-1, -2*y/WINDOW_HIGHT+1));
-			LOG(2 * x / WINDOW_WIDTH - 1 << " -- " << -2 * y / WINDOW_HIGHT + 1);
 		}
 		shader.enable();
-		//shader.setUniform("u_ml_matrix", mat4::rotation({ 0,0,1 }, i));
-		//shader.setUniform("u_color", vec4(sinf(i), cosf(i/2), 1, 1));
+		const vec3& meshCenter = figureOne.getPosition();
+		double time = glfwGetTime();
+		cam.setPosX(sin(time) + meshCenter.x);
+		cam.setPosZ(cos(time) + meshCenter.z);
+		cam.lookAt(figureOne.getPosition());
+
+		shader.setUniform("u_vw_matrix", cam.getMatrix());
 
 		spriteOne.bind();
 		ibo.bind();
-		shader.setUniform("u_ml_matrix", mat4::translation(figureOne.getPosition()));
+		shader.setUniform("u_ml_matrix", mat4::translation(meshCenter));
 		glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_INT, 0);
 		ibo.bind();
 		spriteOne.unbind();
-		/*
-		spriteTwo.bind();
-		ibo.bind();
-		shader.setUniform("u_ml_matrix", mat4::translation(figureTwo.getPosition()));
-		glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_INT, 0);
-		ibo.bind();
-		spriteTwo.unbind();
-		*/
+
 		window.update();
 	}
 
