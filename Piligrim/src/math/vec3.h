@@ -13,14 +13,17 @@ namespace piligrim {
 			vec3(float x, float y, float z);
 
 			double scalProduct(const vec3& right) const;
+			vec3 crossProduct(const vec3& right) const;
 			double length() const;
 			double distTo(const vec3& right) const;
+			vec3 getNormalize() const;
 
 			friend vec3 operator +(const vec3& left, const vec3& right);
 			friend vec3 operator -(const vec3& left, const vec3& right);
 			friend double operator *(const vec3& left, const vec3& right);
 			friend vec3 operator *(const vec3& left, const double& scal);
 			friend vec3 operator /(const vec3& left, const double& scal);
+			friend vec3 operator -(const vec3& vec);
 
 			vec3& operator +=(const vec3& right);
 			vec3& operator -=(const vec3& right);
