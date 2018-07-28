@@ -73,20 +73,38 @@ int main()
 	// Shader END
 	Camera cam;
 
+	float camSpeed = 5;
+	float currentTime, lastTime = glfwGetTime(), deltaTime;
+
 	while (!window.closed())
 	{
+		currentTime = glfwGetTime();
+		deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
 		window.clear();
 		double x, y;
 		if (window.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1))
 		{
 			window.getMousePosition(x, y);
 		}
+		if (window.isKeyPressed(GLFW_KEY_W))
+		{
+			cam.setPosition(cam.getPosition() + cam.getLookDir() * camSpeed * deltaTime);
+		}
+		if (window.isKeyPressed(GLFW_KEY_S))
+		{
+			cam.setPosition(cam.getPosition() - cam.getLookDir() * camSpeed * deltaTime);
+		}
+		if (window.isKeyPressed(GLFW_KEY_A))
+		{
+			cam.setPosition(cam.getPosition() - cam.getRightDir() * camSpeed * deltaTime);
+		}
+		if (window.isKeyPressed(GLFW_KEY_D))
+		{
+			cam.setPosition(cam.getPosition() + cam.getRightDir() * camSpeed * deltaTime);
+		}
 		shader.enable();
 		const vec3& meshCenter = figureOne.getPosition();
-		double time = glfwGetTime();
-		cam.setPosX(sin(time) + meshCenter.x);
-		cam.setPosZ(cos(time) + meshCenter.z);
-		cam.lookAt(figureOne.getPosition());
 
 		shader.setUniform("u_vw_matrix", cam.getMatrix());
 
