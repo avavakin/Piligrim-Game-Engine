@@ -1,4 +1,5 @@
 #pragma once
+#include "vec3.h"
 
 namespace piligrim {
 	namespace math {
@@ -25,6 +26,8 @@ namespace piligrim {
 			vec4& operator +=(const vec4& right);
 			vec4& operator -=(const vec4& right);
 			vec4& operator *=(const double& scal);
+
+			operator vec3() const;
 
 			friend bool operator==(const vec4& left, const vec4& right);
 			friend bool operator!=(const vec4& left, const vec4& right);

@@ -92,6 +92,11 @@ namespace piligrim {
 			return *this;
 		}
 
+		vec4::operator vec3() const
+		{
+			return vec3(this->x, this->y, this->z);
+		}
+
 
 
 		bool operator==(const vec4 & left, const vec4 & right)
