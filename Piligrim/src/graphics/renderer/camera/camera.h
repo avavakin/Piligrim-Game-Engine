@@ -58,12 +58,14 @@ namespace piligrim
 
 			inline void setLookDir(math::vec3 lookDir)
 			{
-				backDir_ = -lookDir;
-				backDir_ = backDir_.getNormalize();
-				rightDir_ = math::vec3(0, 1, 0).crossProduct(backDir_).getNormalize();
-				upDir_ = backDir_.crossProduct(rightDir_);
+				if (lookDir != -backDir_) {
+					backDir_ = -lookDir;
+					backDir_ = backDir_.getNormalize();
+					rightDir_ = math::vec3(0, 1, 0).crossProduct(backDir_).getNormalize();
+					upDir_ = backDir_.crossProduct(rightDir_);
 
-				isMatrixDirectionOld_ = true;
+					isMatrixDirectionOld_ = true;
+				}
 			}
 			inline math::vec3 getLookDir() const
 			{
