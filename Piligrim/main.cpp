@@ -147,6 +147,13 @@ int main()
 			cam.setPosition(cam.getPosition() + cam.getRightDir() * camSpeed * deltaTime);
 		}
 
+		if (window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+			cam.setPosition(cam.getPosition() - vec3(0.f, 1.f, 0.f) * camSpeed * deltaTime);
+		}
+		if (window.isKeyPressed(GLFW_KEY_SPACE)) {
+			cam.setPosition(cam.getPosition() + vec3(0.f, 1.f, 0.f) * camSpeed * deltaTime);
+		}
+
 		shader.enable();
 		const vec3& meshCenter = figureOne.getPosition();
 
