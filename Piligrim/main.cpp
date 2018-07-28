@@ -4,6 +4,7 @@
 #include "src\graphics\shader.h"
 #include "src\physics\models\Mesh.h"
 #include "src\math\mat4.h"
+#include "src\math\math_func.h"
 #include "src\utils\fileutils.h"
 
 #include "src\graphics\buffers\buffers.h"
@@ -74,35 +75,78 @@ int main()
 	Camera cam;
 
 	float camSpeed = 5;
-	float currentTime, lastTime = glfwGetTime(), deltaTime;
 
+	float pitch = 0;
+	float yaw = -90;
+
+	vec3 camDir = cam.getLookDir();
+
+	float currentTime, lastTime = glfwGetTime(), deltaTime;
+	double lastX, lastY;
+	window.getMousePosition(lastX, lastY);
+	double x, y;
+	double offsetX, offsetY;
+	double sensitivity = 0.9f;
 	while (!window.closed())
 	{
 		currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
+
 		window.clear();
-		double x, y;
-		if (window.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1))
-		{
-			window.getMousePosition(x, y);
+
+		window.getMousePosition(x, y);
+
+		offsetX = x - lastX;
+		offsetY = lastY - y;
+
+		lastX = x;
+		lastY = y;
+
+		offsetX *= sensitivity;
+		offsetY *= sensitivity;
+
+		if (offsetY != 0) {
+			yaw += offsetX;
+			pitch += offsetY;
+			if (pitch > 90) {
+				pitch = 90;
+			}
+			else if (pitch < -80) {
+				pitch = -80;
+			}
+			camDir = vec3(
+				cos(toRadians(pitch)) * cos(toRadians(yaw)),
+				sin(toRadians(pitch)),
+				cos(toRadians(pitch)) * sin(toRadians(yaw))
+			);
 		}
-		if (window.isKeyPressed(GLFW_KEY_W))
+		else if (offsetX != 0)
 		{
+			yaw += offsetX;
+			camDir.x = cos(toRadians(pitch)) * cos(toRadians(yaw));
+			camDir.z = cos(toRadians(pitch)) * sin(toRadians(yaw));
+		}
+
+		cam.setLookDir(camDir);
+
+		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
+			break;
+		}
+
+		if (window.isKeyPressed(GLFW_KEY_W)) {
 			cam.setPosition(cam.getPosition() + cam.getLookDir() * camSpeed * deltaTime);
 		}
-		if (window.isKeyPressed(GLFW_KEY_S))
-		{
+		if (window.isKeyPressed(GLFW_KEY_S)) {
 			cam.setPosition(cam.getPosition() - cam.getLookDir() * camSpeed * deltaTime);
 		}
-		if (window.isKeyPressed(GLFW_KEY_A))
-		{
+		if (window.isKeyPressed(GLFW_KEY_A)) {
 			cam.setPosition(cam.getPosition() - cam.getRightDir() * camSpeed * deltaTime);
 		}
-		if (window.isKeyPressed(GLFW_KEY_D))
-		{
+		if (window.isKeyPressed(GLFW_KEY_D)) {
 			cam.setPosition(cam.getPosition() + cam.getRightDir() * camSpeed * deltaTime);
 		}
+
 		shader.enable();
 		const vec3& meshCenter = figureOne.getPosition();
 
