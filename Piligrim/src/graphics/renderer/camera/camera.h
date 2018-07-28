@@ -70,6 +70,11 @@ namespace piligrim
 				return -backDir_;
 			}
 
+			inline math::vec3 getRightDir() const
+			{
+				return rightDir_;
+			}
+
 			inline math::mat4 getMatrix()
 			{
 				if (isMatrixDirectionOld_) {
