@@ -13,7 +13,6 @@ namespace piligrim {
 
 		bool Window::isKeyPressed(unsigned short keycode)
 		{
-			// TODO: LOG THIS!
 			if (keycode >= MAX_KEYS)
 				return false;
 			return keys_[keycode];
@@ -21,7 +20,6 @@ namespace piligrim {
 
 		bool Window::isMouseButtonPressed(unsigned short buttoncode)
 		{
-			// TODO: LOG THIS!
 			if (buttoncode >= MAX_MOUSE_BUTTONS)
 				return false;
 			return mouseButtons_[buttoncode];
