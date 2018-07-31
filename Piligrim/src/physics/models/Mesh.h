@@ -137,25 +137,6 @@ namespace piligrim {
 			Mesh& operator +=(const math::vec3& vec);
 			Mesh& operator -=(const math::vec3& vec);
 			Mesh& operator *=(const math::mat4& matrix);
-
-		private:
-
-			inline void calcCenter()
-			{
-				center = {0,0,0};
-
-				for (unsigned int id = 0; id < pointsCount; id++) {
-					center += math::vec3(points[id*3], points[id*3+1], points[id*3+2]);
-				}
-				center /= pointsCount;
-			}
-
-			inline graphics::VertexArray buildVAO()
-			{
-				graphics::VertexArray result;
-				result.addBuffer(new graphics::Buffer(points, pointsCount * 3, 3), 0);
-				return result;
-			}
 		};
 
 	}

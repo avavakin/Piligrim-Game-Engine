@@ -70,11 +70,7 @@ namespace piligrim {
 		{
 			*this *= matr;
 		}
-
-		void Mesh::draw()
-		{
-			graphics::VertexArray sprite = buildVAO();
-		}
+		
 
 		Mesh & Mesh::operator+=(const math::vec3 & vec)
 		{
