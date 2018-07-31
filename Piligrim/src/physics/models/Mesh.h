@@ -126,7 +126,6 @@ namespace piligrim {
 			}
 
 			void applyMatrix(math::mat4 matr);
-			void draw();
 
 			inline math::vec3 getPosition() const { return center; }
 
