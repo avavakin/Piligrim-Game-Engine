@@ -176,7 +176,7 @@ int main()
 		lastTime = currentTime;
 
 		window.clear();
-		/*
+
 		window.getMousePosition(x, y);
 		
 		offsetX = x - lastX;
@@ -188,8 +188,8 @@ int main()
 		offsetX *= sensitivity;
 		offsetY *= sensitivity;
 
+		yaw += offsetX;
 		if (offsetY != 0) {
-			yaw += offsetX;
 			pitch += offsetY;
 			if (pitch > 90) {
 				pitch = 90;
@@ -205,17 +205,16 @@ int main()
 		}
 		else if (offsetX != 0)
 		{
-			yaw += offsetX;
 			camDir.x = cos(toRadians(pitch)) * cos(toRadians(yaw));
 			camDir.z = cos(toRadians(pitch)) * sin(toRadians(yaw));
 		}
 
 		cam.setLookDir(camDir);
-		*/
+
 		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
 			break;
 		}
-		/*
+
 		if (window.isKeyPressed(GLFW_KEY_W)) {
 			cam.setPosition(cam.getPosition() + cam.getLookDir() * camSpeed * deltaTime);
 		}
@@ -235,7 +234,6 @@ int main()
 		if (window.isKeyPressed(GLFW_KEY_SPACE)) {
 			cam.setPosition(cam.getPosition() + vec3(0.f, 1.f, 0.f) * camSpeed * deltaTime);
 		}
-		*/
 
 
 		shaderMesh.enable();
@@ -244,14 +242,6 @@ int main()
 			cos(glfwGetTime())*lightRad, 
 			cos(glfwGetTime())*lightRad, 
 			sin(glfwGetTime())*lightRad
-		);
-		cam.set(
-			vec3(
-				cos(glfwGetTime())*lightRad*2,
-				sin(glfwGetTime())*lightRad*2,
-				sin(glfwGetTime())*lightRad*2
-			),
-			figureCenter
 		);
 
 		shaderMesh.setUniform("u_light_pos", lightCenter);
