@@ -9,12 +9,14 @@ namespace piligrim {
 		class VertexArray {
 		private:
 			GLuint arrayId;
-			std::vector<Buffer*> buffers;
+			Buffer* buffer_;
 		public:
 			VertexArray();
 			~VertexArray();
-			
-			void addBuffer(Buffer *buffer, GLuint index);
+
+			void setBuffer(Buffer* buffer);
+
+			void addBufferAttributes(GLuint index, GLuint elementCount, GLsizei stride, GLuint leftPaddingInBytes);
 
 			void bind() const;
 			void unbind() const;

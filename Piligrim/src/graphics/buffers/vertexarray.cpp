@@ -3,23 +3,27 @@
 piligrim::graphics::VertexArray::VertexArray()
 {
 	glGenVertexArrays(1, &arrayId);
+	buffer_ = nullptr;
 }
 
 piligrim::graphics::VertexArray::~VertexArray()
 {
-	for (unsigned int i = 0; i < buffers.size(); i++)
-		delete buffers[i];
+	if (buffer_ != nullptr)
+		delete[] buffer_;
 }
 
-void piligrim::graphics::VertexArray::addBuffer(Buffer * buffer, GLuint index)
+void piligrim::graphics::VertexArray::setBuffer(Buffer* buffer)
+{
+	buffer_ = buffer;
+}
+
+void piligrim::graphics::VertexArray::addBufferAttributes(GLuint index, GLuint elementCount, GLsizei stride, GLuint leftPaddingInBytes)
 {
 	bind();
-	buffer->bind();
+	buffer_->bind();
 
 	glEnableVertexAttribArray(index);
-	glVertexAttribPointer(index, buffer->getComponentCount(), GL_FLOAT, GL_FALSE, 0, 0);
-
-	buffer->unbind();
+	glVertexAttribPointer(index, elementCount, GL_FLOAT, GL_FALSE, stride, (GLvoid*)leftPaddingInBytes);
 	unbind();
 }
 

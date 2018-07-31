@@ -1,7 +1,6 @@
 #include "buffer.h"
 
-piligrim::graphics::Buffer::Buffer(GLfloat * data, GLuint count, GLuint componentCount, GLint drawMode)
-	:componentCount(componentCount)
+piligrim::graphics::Buffer::Buffer(GLfloat * data, GLuint count, GLint drawMode)
 {
 	glGenBuffers(1, &bufferId);
 	bind();

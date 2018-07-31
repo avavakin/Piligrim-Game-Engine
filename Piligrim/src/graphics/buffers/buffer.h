@@ -7,10 +7,8 @@ namespace piligrim {
 		class Buffer {
 		private:
 			GLuint bufferId;
-			GLuint componentCount;
 		public:
-			Buffer(GLfloat *data, GLuint count, GLuint componentCount, GLint drawMode = GL_STATIC_DRAW);
-			GLuint getComponentCount() const { return componentCount; }
+			Buffer(GLfloat *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
 
 			void bind() const;
 			void unbind() const;
