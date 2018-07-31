@@ -138,8 +138,14 @@ int main()
 
 	shaderMesh.setUniform("u_pr_matrix", persp);
 
-	shaderMesh.setUniform("u_object_color", vec3(0.2, 0.8, 0.2));
-	shaderMesh.setUniform("u_light_color", vec3(1, 1, 1));
+	shaderMesh.setUniform("u_material.ambient", vec3(0.2f, 0.8f, 0.2f));
+	shaderMesh.setUniform("u_material.diffuse", vec3(0.2f, 0.8f, 0.2f));
+	shaderMesh.setUniform("u_material.specular", vec3(0.5f, 0.5f, 0.5f));
+	shaderMesh.setUniform("u_material.shininess", 32.0f);
+
+	shaderMesh.setUniform("u_light.ambient", vec3(0.2f, 0.2f, 0.2f));
+	shaderMesh.setUniform("u_light.diffuse", vec3(0.5f, 0.5f, 0.5f));
+	shaderMesh.setUniform("u_light.specular", vec3(1.0f, 1.0f, 1.0f));
 
 
 	Shader shaderLight("src/shaders/light.vert", "src/shaders/light.frag", shaderErrorMessage);
@@ -244,7 +250,7 @@ int main()
 			sin(glfwGetTime())*lightRad
 		);
 
-		shaderMesh.setUniform("u_light_pos", lightCenter);
+		shaderMesh.setUniform("u_light.position", lightCenter);
 		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
 		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter));
 
