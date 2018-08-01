@@ -1,6 +1,5 @@
 #pragma once
 #include "../../math/math.h"
-#include "../../graphics/scenegraph/isceneobject.h"
 #include "../../graphics/buffers/vertexarray.h"
 #include "../../graphics/buffers/buffer.h"
 #include <vector>
@@ -57,7 +56,7 @@ namespace piligrim {
 			void clear() { indecies.clear(); }
 		};
 
-		class Mesh //: graphics::ISceneObject 
+		class Mesh 
 		{
 		private:
 			float* points = nullptr;
