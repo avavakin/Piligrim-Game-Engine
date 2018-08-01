@@ -11,18 +11,18 @@ namespace piligrim {
 		class Shader 
 		{
 		private:
-			GLuint shader = 0;
-			const char* vertPath;
-			const char* fragPath;
+			GLuint shader_ = 0;
+			std::string vertPath_;
+			std::string fragPath_;
 		public:
-			Shader(const char *vertPath, const char *fragmPath);
-			Shader(const char *vertPath, const char *fragmPath, std::string& errorMessage);
+			Shader(std::string vertPath, std::string fragmPath);
+			Shader(std::string vertPath, std::string fragmPath, std::string& errorMessage);
 			~Shader();
 
 			void enable() const;
 			void disable() const;
 
-			GLuint id() const;
+			GLuint getId() const;
 			bool isOk() const;
 
 			GLint getUniformLocation(const GLchar* name);
@@ -36,6 +36,10 @@ namespace piligrim {
 
 		private:
 			GLuint load(std::string & errorMessage);
+			static bool compileShader(GLuint shader, const char* code, std::string& errorMessage, const std::string& errorPrefix = "[Shader] Compile error | " );
+			static bool linkProgram(GLuint program, GLuint vertex, GLuint fragment, std::string& errorMessage, const std::string& errorPrefix = "[Shader program] Compile error | ");
+			static std::string getShaderErrorMessage(GLuint shader);
+			static std::string getProgramErrorMessage(GLuint program);
 		};
 
 	}

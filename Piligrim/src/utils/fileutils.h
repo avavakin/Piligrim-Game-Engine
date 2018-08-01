@@ -2,12 +2,13 @@
 #include <string>
 
 namespace piligrim {
+
 	class FileUtils
 	{
 	public:
-		static std::string readFile(const char* filepath)
+		static std::string readFile(std::string filepath)
 		{
-			FILE * file = fopen(filepath, "rt");
+			FILE * file = fopen(filepath.c_str(), "rt");
 			fseek(file, 0, SEEK_END);
 			unsigned long length = ftell(file);
 			char *data = new char[length + 1];
@@ -19,6 +20,7 @@ namespace piligrim {
 
 			std::string result(data);
 			delete[] data;
+
 			return result;
 		}
 	};
