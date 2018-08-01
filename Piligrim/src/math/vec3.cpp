@@ -28,12 +28,13 @@ namespace piligrim {
 				this->z*right.x - this->x*right.z,
 				this->x*right.y - this->y*right.x
 			);
+
 			return temp;
 		}
 
 		double vec3::length() const
 		{
-			return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+			return sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
 		}
 
 		double vec3::distTo(const vec3 & right) const
@@ -51,10 +52,9 @@ namespace piligrim {
 			if (length != 0) {
 				return vec3(x / length, y / length, z / length);
 			}
+
 			return *this;
 		}
-
-
 
 		vec3 operator+(const vec3 & left, const vec3 & right)
 		{
@@ -66,27 +66,20 @@ namespace piligrim {
 			return vec3(left.x - right.x, left.y - right.y, left.z - right.z);
 		}
 
-		double operator*(const vec3 & left, const vec3 & right)
+		vec3 operator*(const vec3 & left, double scal)
 		{
-			return left.scalProduct(right);
+			return vec3(left.x * scal, left.y * scal, left.z * scal);
 		}
 
-		vec3 operator*(const vec3 & left, const double & scal)
+		vec3 operator/(const vec3 & left, double scal)
 		{
-			return vec3(left.x*scal, left.y*scal, left.z*scal);
-		}
-
-		vec3 operator/(const vec3 & left, const double & scal)
-		{
-			return vec3(left.x/scal, left.y/scal, left.z/scal);
+			return vec3(left.x / scal, left.y / scal, left.z / scal);
 		}
 
 		vec3 operator-(const vec3 & vec)
 		{
-			return vec3(-vec.x,-vec.y,-vec.z);
+			return vec3(-vec.x, -vec.y, -vec.z);
 		}
-
-
 
 		vec3 & vec3::operator+=(const vec3 & right)
 		{
@@ -106,7 +99,7 @@ namespace piligrim {
 			return *this;
 		}
 
-		vec3& vec3::operator*=(const double & scal)
+		vec3& vec3::operator*=(double scal)
 		{
 			this->x *= scal;
 			this->y *= scal;
@@ -115,7 +108,7 @@ namespace piligrim {
 			return *this;
 		}
 
-		vec3 & vec3::operator/=(const double & scal)
+		vec3 & vec3::operator/=(double scal)
 		{
 			this->x /= scal;
 			this->y /= scal;
@@ -123,8 +116,6 @@ namespace piligrim {
 
 			return *this;
 		}
-
-
 
 		bool operator==(const vec3 & left, const vec3 & right)
 		{

@@ -20,15 +20,14 @@ namespace piligrim {
 
 			friend vec3 operator +(const vec3& left, const vec3& right);
 			friend vec3 operator -(const vec3& left, const vec3& right);
-			friend double operator *(const vec3& left, const vec3& right);
-			friend vec3 operator *(const vec3& left, const double& scal);
-			friend vec3 operator /(const vec3& left, const double& scal);
+			friend vec3 operator *(const vec3& left, double scal);
+			friend vec3 operator /(const vec3& left, double scal);
 			friend vec3 operator -(const vec3& vec);
 
 			vec3& operator +=(const vec3& right);
 			vec3& operator -=(const vec3& right);
-			vec3& operator *=(const double& scal);
-			vec3& operator /=(const double& scal);
+			vec3& operator *=(double scal);
+			vec3& operator /=(double scal);
 
 			friend bool operator==(const vec3& left, const vec3& right);
 			friend bool operator!=(const vec3& left, const vec3& right);

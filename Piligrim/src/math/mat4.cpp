@@ -10,82 +10,33 @@ namespace piligrim {
 
 		mat4::mat4(float diagonal)
 		{
-			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++)
-				if (i % (MAT4_N + 1) != 0)
-					elements[i] = 0;
-				else
-					elements[i] = diagonal;
-		}
-
-		mat4 operator*(const mat4 & left, const mat4 & right)
-		{
-			mat4 result;
-
-			for (unsigned char x = 0; x < MAT4_N; x++)
-				for (unsigned char y = 0; y < MAT4_N; y++)
-				{
-					result.elements[y + x*MAT4_N] = 0;
-					for (unsigned char e = 0; e < MAT4_N; e++)
-						result.elements[y + x*MAT4_N] += left.elements[y + e*MAT4_N]*right.elements[e + x*MAT4_N];
+			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++) {
+				if (i % (MAT4_N + 1) != 0) {
+					elements[i] = 0.0f;
 				}
-
-			return result;
+				else {
+					elements[i] = diagonal;
+				}
+			}
 		}
-
-		mat4 operator+(const mat4 & left, const mat4 & right)
-		{
-			mat4 result;
-			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++)
-				result.elements[i] = left.elements[i] + right.elements[i];
-
-			return mat4();
-		}
-
-		mat4 operator-(const mat4 & left, const mat4 & right)
-		{
-			mat4 result;
-			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++)
-				result.elements[i] = left.elements[i] - right.elements[i];
-
-			return mat4();
-		}
-
-		mat4 & mat4::operator*=(const mat4 & right)
-		{
-			*this = *this * right;
-
-			return *this;
-		}
-
-		mat4 & mat4::operator+=(const mat4 & right)
-		{
-			*this = *this + right;
-
-			return *this;
-		}
-		mat4 & mat4::operator-=(const mat4 & right)
-		{
-			*this = *this - right;
-
-			return *this;
-		}
-
-
 
 		mat4 mat4::identity()
 		{
 			return mat4(1.0f);
 		}
+
 		mat4 mat4::orthographic(float left, float right, float top, float bottom, float near, float far)
 		{
 			mat4 result(1.0f);
-			result.elements[0 + 0 * MAT4_N] = 2 / (right - left);
-			result.elements[1 + 1 * MAT4_N] = 2 / (top - bottom);
-			result.elements[2 + 2 * MAT4_N] = -2 / (far - near);
 
-			result.elements[0 + 3 * MAT4_N] = -(right+left) / (right - left);
-			result.elements[1 + 3 * MAT4_N] = -(top+bottom) / (top - bottom);
+			result.elements[0 + 0 * MAT4_N] = 2.0f / (right - left);
+			result.elements[1 + 1 * MAT4_N] = 2.0f / (top - bottom);
+			result.elements[2 + 2 * MAT4_N] = -2.0f / (far - near);
+
+			result.elements[0 + 3 * MAT4_N] = -(right + left) / (right - left);
+			result.elements[1 + 3 * MAT4_N] = -(top + bottom) / (top - bottom);
 			result.elements[2 + 3 * MAT4_N] = -(far + near) / (far - near);
+
 			return result;
 		}
 
@@ -93,16 +44,16 @@ namespace piligrim {
 		{
 			mat4 result(1.0f);
 
-			float q = 1 / tan(toRadians(0.5 * fov));
+			float q = 1.0f / tan(toRadians(0.5f * fov));
 			float a = q / aspectRatio;
 
 			float b = (near + far) / (near - far);
-			float c = (2 * near * far) / (near - far);
+			float c = (2.0f * near * far) / (near - far);
 
 			result.elements[0 + 0 * MAT4_N] = a;
 			result.elements[1 + 1 * MAT4_N] = q;
 			result.elements[2 + 2 * MAT4_N] = b;
-			result.elements[3 + 2 * MAT4_N] = -1;
+			result.elements[3 + 2 * MAT4_N] = -1.0f;
 			result.elements[2 + 3 * MAT4_N] = c;
 
 			return result;
@@ -126,11 +77,11 @@ namespace piligrim {
 			float r = toRadians(angle);
 			float c = cos(r);
 			float s = sin(r);
-			float omc = 1 - c;
+			float omc = 1.0f - c;
 
-			const float &x = axis.x;
-			const float &y = axis.y;
-			const float &z = axis.z;
+			float x = axis.x;
+			float y = axis.y;
+			float z = axis.z;
 
 			float x_omc = x*omc;
 			float y_omc = y*omc;
@@ -143,8 +94,6 @@ namespace piligrim {
 			float x_s = x*s;
 			float y_s = y*s;
 			float z_s = z*s;
-
-
 
 			result.elements[0 + 0 * MAT4_N] = x_omc + c;
 			result.elements[1 + 0 * MAT4_N] = x_y_omc + z_s;
@@ -172,18 +121,73 @@ namespace piligrim {
 			return result;
 		}
 
+		mat4 operator*(const mat4 & left, const mat4 & right)
+		{
+			mat4 result;
 
+			for (unsigned char x = 0; x < MAT4_N; x++) {
+				for (unsigned char y = 0; y < MAT4_N; y++) {
+					result.elements[y + x * MAT4_N] = 0.0f;
+					for (unsigned char e = 0; e < MAT4_N; e++) {
+						result.elements[y + x * MAT4_N] += left.elements[y + e * MAT4_N] * right.elements[e + x * MAT4_N];
+					}
+				}
+			}
+
+			return result;
+		}
+
+		mat4 operator+(const mat4 & left, const mat4 & right)
+		{
+			mat4 result;
+
+			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++) {
+				result.elements[i] = left.elements[i] + right.elements[i];
+			}
+
+			return mat4();
+		}
+
+		mat4 operator-(const mat4 & left, const mat4 & right)
+		{
+			mat4 result;
+
+			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++) {
+				result.elements[i] = left.elements[i] - right.elements[i];
+			}
+
+			return mat4();
+		}
+
+		mat4 & mat4::operator*=(const mat4 & right)
+		{
+			*this = *this * right;
+
+			return *this;
+		}
+
+		mat4 & mat4::operator+=(const mat4 & right)
+		{
+			*this = *this + right;
+
+			return *this;
+		}
+		mat4 & mat4::operator-=(const mat4 & right)
+		{
+			*this = *this - right;
+
+			return *this;
+		}
 
 		std::ostream & operator<<(std::ostream & s, const mat4 & matr)
 		{
-			for (unsigned char x = 0; x < MAT4_N; x++)
-			{
-				for (unsigned char y = 0; y < MAT4_N; y++)
-				{
+			for (unsigned char x = 0; x < MAT4_N; x++) {
+				for (unsigned char y = 0; y < MAT4_N; y++) {
 					s << matr.elements[x + y*MAT4_N] << " ";
 				}
 				s << std::endl;
 			}
+
 			return s;
 		}
 	}

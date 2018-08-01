@@ -19,7 +19,6 @@ namespace piligrim {
 			this->w = w;
 		}
 
-
 		vec4 operator+(const vec4 & left, const vec4 & right)
 		{
 			return vec4(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
@@ -27,39 +26,13 @@ namespace piligrim {
 
 		vec4 operator-(const vec4 & left, const vec4 & right)
 		{
-			return vec4(left.x - right.x, left.y - right.y, left.z - right.z, left.w-right.w);
+			return vec4(left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w);
 		}
 
-		vec4 operator*(const vec4 & left, const double & scal)
+		vec4 operator*(const vec4 & left, double scal)
 		{
-			return vec4(left.x*scal, left.y*scal, left.z*scal, left.w*scal);
+			return vec4(left.x * scal, left.y * scal, left.z * scal, left.w * scal);
 		}
-
-		vec4 operator*(const mat4 & left, const vec3 & vector)
-		{
-			vec4 result(0, 0, 0, 0);
-
-			result.x = left.columns[0].x * vector.x + left.columns[0].y * vector.y + left.columns[0].z * vector.z + left.columns[0].w;
-			result.y = left.columns[1].x * vector.x + left.columns[1].y * vector.y + left.columns[1].z * vector.z + left.columns[1].w;
-			result.z = left.columns[2].x * vector.x + left.columns[2].y * vector.y + left.columns[2].z * vector.z + left.columns[2].w;
-			result.w = left.columns[3].x * vector.x + left.columns[3].y * vector.y + left.columns[3].z * vector.z + left.columns[3].w;
-
-			return result;
-		}
-
-		vec4 operator*(const mat4 & left, const vec4 & vector)
-		{
-			vec4 result(0, 0, 0, 0);
-
-			result.x = left.columns[0].x * vector.x + left.columns[0].y * vector.y + left.columns[0].z * vector.z + left.columns[0].w * vector.w;
-			result.y = left.columns[1].x * vector.x + left.columns[1].y * vector.y + left.columns[1].z * vector.z + left.columns[1].w * vector.w;
-			result.z = left.columns[2].x * vector.x + left.columns[2].y * vector.y + left.columns[2].z * vector.z + left.columns[2].w * vector.w;
-			result.w = left.columns[3].x * vector.x + left.columns[3].y * vector.y + left.columns[3].z * vector.z + left.columns[3].w * vector.w;
-
-			return result;
-		}
-
-
 
 		vec4 & vec4::operator+=(const vec4 & right)
 		{
@@ -81,13 +54,12 @@ namespace piligrim {
 			return *this;
 		}
 
-		vec4& vec4::operator*=(const double & scal)
+		vec4& vec4::operator*=(double scal)
 		{
 			this->x *= scal;
 			this->y *= scal;
 			this->z *= scal;
 			this->w *= scal;
-
 
 			return *this;
 		}
@@ -96,8 +68,6 @@ namespace piligrim {
 		{
 			return vec3(this->x, this->y, this->z);
 		}
-
-
 
 		bool operator==(const vec4 & left, const vec4 & right)
 		{

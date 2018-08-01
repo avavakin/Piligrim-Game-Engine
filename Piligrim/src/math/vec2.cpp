@@ -21,7 +21,7 @@ namespace piligrim {
 
 		double vec2::length() const
 		{
-			return sqrt(this->x*this->x + this->y*this->y);
+			return sqrt(this->x * this->x + this->y * this->y);
 		}
 
 		double vec2::distTo(const vec2 & right) const
@@ -29,14 +29,12 @@ namespace piligrim {
 			double subsX = this->x - right.x;
 			double subsY = this->y - right.y;
 
-			return sqrt(subsX*subsX + subsY*subsY);;
+			return sqrt(subsX * subsX + subsY * subsY);;
 		}
-
-
-		
+				
 		vec2 operator+(const vec2 & left, const vec2 & right)
 		{
-			return vec2(left.x+right.x, left.y+right.y);
+			return vec2(left.x + right.x, left.y + right.y);
 		}
 
 		vec2 operator-(const vec2 & left, const vec2 & right)
@@ -44,23 +42,16 @@ namespace piligrim {
 			return vec2(left.x - right.x, left.y - right.y);
 		}
 
-		double operator*(const vec2 & left, const vec2 & right)
+		vec2 operator*(const vec2 & left, double scal)
 		{
-			return left.x * right.x + left.y * right.y;
+			return vec2(left.x * scal, left.y * scal);
 		}
 
-		vec2 operator*(const vec2 & left, const double & scal)
+		vec2 operator/(const vec2 & left, double scal)
 		{
-			return vec2(left.x*scal, left.y*scal);
+			return vec2(left.x / scal, left.y / scal);
 		}
-
-		vec2 operator/(const vec2 & left, const double & scal)
-		{
-			return vec2(left.x/scal, left.y/scal);
-		}
-
-
-
+		
 		vec2 & vec2::operator+=(const vec2 & right)
 		{
 			this->x += right.x;
@@ -76,7 +67,7 @@ namespace piligrim {
 			return *this;
 		}
 
-		vec2& vec2::operator*=(const double & scal)
+		vec2& vec2::operator*=(double scal)
 		{
 			this->x *= scal;
 			this->y *= scal;
@@ -84,16 +75,14 @@ namespace piligrim {
 			return *this;
 		}
 
-		vec2 & vec2::operator/=(const double & scal)
+		vec2 & vec2::operator/=(double scal)
 		{
 			this->x /= scal;
 			this->y /= scal;
 
 			return *this;
 		}
-
-
-
+		
 		bool operator==(const vec2 & left, const vec2 & right)
 		{
 			return left.x == right.x && left.y == right.y;
@@ -103,5 +92,6 @@ namespace piligrim {
 		{
 			return !(left == right);
 		}
+
 	}
 }

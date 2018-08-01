@@ -93,9 +93,9 @@ namespace piligrim
 		private:
 			inline void calcMatrixPositionPart()
 			{
-				lookAtMatrix_.columns[3].x = (-position_) * rightDir_;
-				lookAtMatrix_.columns[3].y = (-position_) * upDir_;
-				lookAtMatrix_.columns[3].z = (-position_) * backDir_;
+				lookAtMatrix_.columns[3].x = (-position_).scalProduct(rightDir_);
+				lookAtMatrix_.columns[3].y = (-position_).scalProduct(upDir_);
+				lookAtMatrix_.columns[3].z = (-position_).scalProduct(backDir_);
 			}
 			inline void calcMatrixOtherPart()
 			{
