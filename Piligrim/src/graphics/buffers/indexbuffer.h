@@ -2,20 +2,21 @@
 
 #include <GL/glew.h>
 
+#include "../../utils/glcall.h"
+
 namespace piligrim {
 	namespace graphics {
 		class IndexBuffer {
-		private:
-			GLuint bufferId;
-			GLuint count;
 		public:
 			IndexBuffer(GLuint *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
-			GLuint getCount() const { return count; }
+			GLuint getCount() const { return count_; }
 
 			void bind() const;
 			void unbind() const;
 
-
+		private:
+			GLuint id_;
+			GLuint count_;
 		};
 	}
 }

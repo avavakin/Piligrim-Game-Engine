@@ -2,19 +2,19 @@
 
 piligrim::graphics::Buffer::Buffer(GLfloat * data, GLuint count, GLint drawMode)
 {
-	glGenBuffers(1, &bufferId);
+	GLCall(glGenBuffers(1, &id_));
 	bind();
-	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), data, drawMode);
+	GLCall(glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), data, drawMode));
 	unbind();
 
 }
 
 void piligrim::graphics::Buffer::bind() const
 {
-	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, id_));
 }
 
 void piligrim::graphics::Buffer::unbind() const
 {
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }

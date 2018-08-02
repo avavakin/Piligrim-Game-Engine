@@ -1,15 +1,15 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <vector>
+
+#include <GL/glew.h>
+
+#include "../../utils/glcall.h"
 #include "buffer.h"
 
 namespace piligrim {
 	namespace graphics {
 		class VertexArray {
-		private:
-			GLuint arrayId;
-			Buffer* buffer_;
 		public:
 			VertexArray();
 			~VertexArray();
@@ -21,7 +21,9 @@ namespace piligrim {
 			void bind() const;
 			void unbind() const;
 
-
+		private:
+			GLuint id_;
+			Buffer* buffer_;
 		};
 	}
 }

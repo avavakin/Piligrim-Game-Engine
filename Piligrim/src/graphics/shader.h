@@ -1,19 +1,18 @@
 #pragma once
 
 #include <string>
+
 #include <GL/glew.h>
+
 #include "../math/math.h"
 #include "../utils/fileutils.h"
+#include "../utils/glcall.h"
 
 namespace piligrim {
 	namespace graphics {
 
 		class Shader 
 		{
-		private:
-			GLuint shader_ = 0;
-			std::string vertPath_;
-			std::string fragPath_;
 		public:
 			Shader(std::string vertPath, std::string fragmPath);
 			Shader(std::string vertPath, std::string fragmPath, std::string& errorMessage);
@@ -33,6 +32,11 @@ namespace piligrim {
 			void setUniform(const GLchar* name, const math::vec3& vector);
 			void setUniform(const GLchar* name, const math::vec4& vector);
 			void setUniform(const GLchar* name, const math::mat4& matrix);
+
+		private:
+			GLuint shader_ = 0;
+			std::string vertPath_;
+			std::string fragPath_;
 
 		private:
 			GLuint load(std::string & errorMessage);

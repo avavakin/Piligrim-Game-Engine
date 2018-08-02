@@ -2,7 +2,7 @@
 
 piligrim::graphics::VertexArray::VertexArray()
 {
-	glGenVertexArrays(1, &arrayId);
+	GLCall(glGenVertexArrays(1, &id_));
 	buffer_ = nullptr;
 }
 
@@ -22,17 +22,17 @@ void piligrim::graphics::VertexArray::addBufferAttributes(GLuint index, GLuint e
 	bind();
 	buffer_->bind();
 
-	glEnableVertexAttribArray(index);
-	glVertexAttribPointer(index, elementCount, GL_FLOAT, GL_FALSE, stride, (GLvoid*)leftPaddingInBytes);
+	GLCall(glEnableVertexAttribArray(index));
+	GLCall(glVertexAttribPointer(index, elementCount, GL_FLOAT, GL_FALSE, stride, (GLvoid*)leftPaddingInBytes));
 	unbind();
 }
 
 void piligrim::graphics::VertexArray::bind() const
 {
-	glBindVertexArray(arrayId);
+	GLCall(glBindVertexArray(id_));
 }
 
 void piligrim::graphics::VertexArray::unbind() const
 {
-	glBindVertexArray(0);
+	GLCall(glBindVertexArray(0));
 }

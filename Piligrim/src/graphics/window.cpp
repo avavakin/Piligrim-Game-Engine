@@ -35,17 +35,11 @@ namespace piligrim {
 
 		void Window::clear() const
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		}
 
 		void Window::update()
 		{
-			GLenum error = glGetError();
-
-			if (error != GL_NO_ERROR) {
-				LOG_ER("[Open GL ERRROR] | #" << error);
-			}
-
 			glfwPollEvents();
 			glfwSwapBuffers(window_);
 		}
@@ -120,7 +114,7 @@ namespace piligrim {
 
 		void window_resize(GLFWwindow * window, int width, int height)
 		{
-			glViewport(0, 0, width, height);
+			GLCall(glViewport(0, 0, width, height));
 		}
 
 		void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)

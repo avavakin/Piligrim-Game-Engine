@@ -1,10 +1,12 @@
 #pragma once
 #define GLEW_STATIC
+#include <string>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../../logs.h"
-#include <string>
+#include "../utils/logs.h"
+#include "../utils/glcall.h"
 
 namespace piligrim { 
 	namespace graphics {
@@ -13,15 +15,6 @@ namespace piligrim {
 #define MAX_MOUSE_BUTTONS	32
 		class Window
 		{
-		private:
-			std::string title_;
-			int width_, height_;
-			GLFWwindow *window_;
-			bool closed_;
-
-			static bool keys_[MAX_KEYS];
-			static bool mouseButtons_[MAX_MOUSE_BUTTONS];
-			static double mouseX_, mouseY_;
 		public:
 			Window(const std::string& title, int width, int height);
 			~Window();
@@ -36,6 +29,16 @@ namespace piligrim {
 			static bool isKeyPressed(unsigned short keycode);
 			static bool isMouseButtonPressed(unsigned short buttoncode);
 			static void getMousePosition(double &x, double&y);
+
+		private:
+			std::string title_;
+			int width_, height_;
+			GLFWwindow *window_;
+			bool closed_;
+
+			static bool keys_[MAX_KEYS];
+			static bool mouseButtons_[MAX_MOUSE_BUTTONS];
+			static double mouseX_, mouseY_;
 
 		private:
 			bool init();
