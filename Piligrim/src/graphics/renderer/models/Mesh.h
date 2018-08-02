@@ -9,9 +9,6 @@ namespace piligrim {
 
 		class Mesh 
 		{
-		private:
-			std::vector<Vertex> verticies_;
-			std::vector<unsigned int> indicies_;
 		public:
 			Mesh();
 			Mesh(const std::vector<Vertex>& verticies, const std::vector<unsigned int>& indicies);
@@ -27,6 +24,9 @@ namespace piligrim {
 
 			std::vector<Vertex> const & getVerticies() const;
 			std::vector<unsigned int> const & getIndicies() const;
+		private:
+			std::vector<Vertex> verticies_;
+			std::vector<unsigned int> indicies_;
 		};
 
 	}

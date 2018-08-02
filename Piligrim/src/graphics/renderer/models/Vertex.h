@@ -3,10 +3,6 @@
 namespace piligrim {
 	namespace graphics {
 		class Vertex {
-		private:
-			math::vec3 position_;
-			math::vec3 color_;
-			math::vec2 textCoord_;
 		public:
 			Vertex();
 			Vertex(const math::vec3& position);
@@ -28,6 +24,10 @@ namespace piligrim {
 
 			double distTo(const Vertex &other) const { return this->position_.distTo(other.position_); }
 
+		private:
+			math::vec3 position_;
+			math::vec3 color_;
+			math::vec2 textCoord_;
 		};
 	}
 }
