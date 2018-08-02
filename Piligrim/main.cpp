@@ -1,14 +1,18 @@
 #include <iostream>
-#include "logs.h"
-#include "src\graphics\window.h"
-#include "src\graphics\shader.h"
-#include "src\physics\models\Mesh.h"
+
+#include "src\utils\logs.h"
+#include "src\utils\fileutils.h"
+#include "src\utils\glcall.h"
+
 #include "src\math\mat4.h"
 #include "src\math\math_func.h"
-#include "src\utils\fileutils.h"
 
+#include "src\graphics\window.h"
+#include "src\graphics\shader.h"
 #include "src\graphics\buffers\buffers.h"
 #include "src\graphics\renderer\camera\camera.h"
+#include "src\graphics\renderer\models\Mesh.h"
+#include "src\graphics\renderer\models\Texture.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HIGHT (WINDOW_WIDTH * 9 / 16)
@@ -18,12 +22,11 @@ int main()
 	using namespace piligrim;
 	using namespace graphics;
 	using namespace math;
-	using namespace physics;
 
 	Window window("Scott Piligrim vs. World!", WINDOW_WIDTH, WINDOW_HIGHT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 
-	glEnable(GL_DEPTH_TEST);
+	GLCall(glEnable(GL_DEPTH_TEST));
 	float cubeEdge = 10;
 	cubeEdge /= 2;
 	float lightPointsSource[] =
@@ -43,47 +46,53 @@ int main()
 
 	float meshPointsSource[] =
 	{
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,
-		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,
+		// FRONT
+		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
+		cubeEdge, -cubeEdge, -cubeEdge,   0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
+		cubeEdge,  cubeEdge, -cubeEdge,   0.0f,  0.0f, -1.0f,     0.0f,  1.0f,
+		cubeEdge,  cubeEdge, -cubeEdge,   0.0f,  0.0f, -1.0f,     0.0f,  1.0f,
+		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  1.0f,
+		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
 
-		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,
-		-cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,
-		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,
+		// BACK
+		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
+		cubeEdge, -cubeEdge,  cubeEdge,   0.0f,  0.0f,  1.0f,     1.0f,  0.0f,
+		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
+		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
+		-cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,     0.0f,  1.0f,
+		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
+		 
+		// LEFT
+		-cubeEdge,  cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
+		-cubeEdge,  cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		-cubeEdge, -cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
+		-cubeEdge, -cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
+		-cubeEdge, -cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
+		-cubeEdge,  cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
 
-		-cubeEdge,  cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,
-		-cubeEdge,  cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,
-		-cubeEdge, -cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,
-		-cubeEdge,  cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,
+		// RIGHT
+		cubeEdge,  cubeEdge,  cubeEdge,   1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		cubeEdge,  cubeEdge, -cubeEdge,   1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
+		cubeEdge, -cubeEdge, -cubeEdge,   1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
+		cubeEdge, -cubeEdge, -cubeEdge,   1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
+		cubeEdge, -cubeEdge,  cubeEdge,   1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
+		cubeEdge,  cubeEdge,  cubeEdge,   1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		 
+		// BOTTOM
+		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,     0.0f,  0.0f,
+		cubeEdge, -cubeEdge, -cubeEdge,   0.0f, -1.0f,  0.0f,     1.0f,  0.0f,
+		cubeEdge, -cubeEdge,  cubeEdge,   0.0f, -1.0f,  0.0f,     1.0f,  1.0f,
+		cubeEdge, -cubeEdge,  cubeEdge,   0.0f, -1.0f,  0.0f,     1.0f,  1.0f,
+		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f, -1.0f,  0.0f,     0.0f,  1.0f,
+		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,     0.0f,  0.0f,
 
-		cubeEdge,  cubeEdge,  cubeEdge,  1.0f,  0.0f,  0.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,  1.0f,  0.0f,  0.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,  1.0f,  0.0f,  0.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,  1.0f,  0.0f,  0.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,  1.0f,  0.0f,  0.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,  1.0f,  0.0f,  0.0f,
-
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,  0.0f, -1.0f,  0.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,  0.0f, -1.0f,  0.0f,
-		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f, -1.0f,  0.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,
-
-		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  1.0f,  0.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  1.0f,  0.0f,
-		-cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  1.0f,  0.0f,
-		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f
+		// TOP
+		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  1.0f,
+		cubeEdge,  cubeEdge, -cubeEdge,   0.0f,  1.0f,  0.0f,     1.0f,  1.0f,
+		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
+		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
+		-cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  0.0f,
+		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  1.0f
 	};
 
 	unsigned int lightIndeciesSource[] =
@@ -109,14 +118,18 @@ int main()
 	};
 
 	vec3 figureCenter(0,0,0);
-	vec3 lightCenter;
+	vec3 lightCenter(cubeEdge*2, cubeEdge*3, cubeEdge*2);
 
 	VertexArray spriteFigure, spriteLightSource;
 	IndexBuffer lightIbo(lightIndeciesSource, sizeof(lightIndeciesSource) / sizeof(unsigned int));
 
 	spriteFigure.setBuffer(new Buffer(meshPointsSource, sizeof(meshPointsSource)/sizeof(float)));
-	spriteFigure.addBufferAttributes(0, 3, 6 * sizeof(float), 0);
-	spriteFigure.addBufferAttributes(1, 3, 6 * sizeof(float), 3 * sizeof(float));
+	spriteFigure.addBufferAttributes(0, 3, 8 * sizeof(float), 0); // positions
+	spriteFigure.addBufferAttributes(1, 3, 8 * sizeof(float), 3 * sizeof(float)); // normals
+	spriteFigure.addBufferAttributes(2, 2, 8 * sizeof(float), 6 * sizeof(float)); // texture coords
+
+	Texture boxDiffuse("C:/Users/Arkady/Desktop/test/diffuse.jpg");
+	Texture boxSpecular("C:/Users/Arkady/Desktop/test/specular.jpg");
 
 	spriteLightSource.setBuffer(new Buffer(lightPointsSource, sizeof(lightPointsSource)/sizeof(float)));
 	spriteLightSource.addBufferAttributes(0, 3, 0, 0);
@@ -139,8 +152,8 @@ int main()
 	shaderMesh.setUniform("u_pr_matrix", persp);
 
 	shaderMesh.setUniform("u_material.ambient", vec3(0.2f, 0.8f, 0.2f));
-	shaderMesh.setUniform("u_material.diffuse", vec3(0.2f, 0.8f, 0.2f));
-	shaderMesh.setUniform("u_material.specular", vec3(0.5f, 0.5f, 0.5f));
+	shaderMesh.setUniform("u_material.diffuse", 0);
+	shaderMesh.setUniform("u_material.specular", 1);
 	shaderMesh.setUniform("u_material.shininess", 32.0f);
 
 	shaderMesh.setUniform("u_light.ambient", vec3(0.2f, 0.2f, 0.2f));
@@ -159,7 +172,7 @@ int main()
 	shaderLight.enable();
 	shaderLight.setUniform("u_pr_matrix", persp);
 	// Shader END
-	Camera cam(vec3(0,0,cubeEdge*2), vec3(0,0,0));
+	Camera cam(vec3(0,0,cubeEdge*3), vec3(0,0,0));
 
 	float camSpeed = 50;
 
@@ -177,11 +190,11 @@ int main()
 	float lightRad = cubeEdge * 4;
 	while (!window.closed())
 	{
+		window.clear();
+
 		currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
-
-		window.clear();
 
 		window.getMousePosition(x, y);
 		
@@ -244,21 +257,26 @@ int main()
 
 		shaderMesh.enable();
 		shaderMesh.setUniform("u_vw_matrix", cam.getMatrix());
+		/*
 		lightCenter = vec3(
 			cos(glfwGetTime())*lightRad, 
 			cos(glfwGetTime())*lightRad, 
 			sin(glfwGetTime())*lightRad
 		);
-
+		*/
 		shaderMesh.setUniform("u_light.position", lightCenter);
 		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
 		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter));
 
+		boxDiffuse.bind(0);
+		boxSpecular.bind(1);
 		spriteFigure.bind();
 
-		glDrawArrays(GL_TRIANGLES, 0, sizeof(meshPointsSource) / sizeof(float) / 2 / 3);
+		glDrawArrays(GL_TRIANGLES, 0, sizeof(meshPointsSource) / sizeof(float) / 8);
 
 		spriteFigure.unbind();
+		boxSpecular.unbind();
+		boxDiffuse.unbind();
 
 		shaderMesh.disable();
 
