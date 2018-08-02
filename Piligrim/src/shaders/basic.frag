@@ -33,13 +33,22 @@ vec3 calcColor(Material material, Light light)
 	vec3 norm = normalize(Normal);
 
 	vec3 lightDir = normalize(light.position - FragPos);
-	float diff = max(dot(norm, lightDir), 0.0f);
-	vec3 diffuse = diff * material.diffuse * light.diffuse;
+	float diff = max(
+		dot(norm, lightDir), 
+		0.0f
+	);
+	vec3 diffuse = material.diffuse * light.diffuse * diff;
 
 	vec3 camDir = normalize(u_cam_pos - FragPos);
 	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(  max( dot(camDir, reflectDir), 0.0f ) , material.shininess); 
-	vec3 specular = material.specular * spec * light.specular;
+	float spec = pow(
+		max(
+			dot(camDir, reflectDir), 
+			0.0f
+		), 
+		material.shininess
+	); 
+	vec3 specular = material.specular * light.specular * spec;
 
 	return ambient + diffuse + specular;
 }
