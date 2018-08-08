@@ -8,7 +8,7 @@ namespace piligrim {
 	namespace graphics {
 		class Buffer {
 		public:
-			Buffer(GLfloat *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
+			Buffer(GLvoid *data, GLuint size, GLint drawMode = GL_STATIC_DRAW);
 
 			void bind() const;
 			void unbind() const;

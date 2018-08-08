@@ -4,6 +4,8 @@
 
 #include <GL/glew.h>
 
+#include "../graphics/renderer/models/Material.h"
+
 #include "../math/math.h"
 #include "../utils/fileutils.h"
 #include "../utils/glcall.h"
@@ -32,6 +34,7 @@ namespace piligrim {
 			void setUniform(const GLchar* name, const math::vec3& vector);
 			void setUniform(const GLchar* name, const math::vec4& vector);
 			void setUniform(const GLchar* name, const math::mat4& matrix);
+			void setUniform(const GLchar* name, const Material& material);
 
 		private:
 			GLuint shader_ = 0;

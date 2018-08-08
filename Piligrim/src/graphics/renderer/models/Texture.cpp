@@ -2,19 +2,20 @@
 
 namespace piligrim {
 	namespace graphics {
+		Texture::Texture()
+		{
+		}
 
 		Texture::Texture(std::string fileName)
-			:fileName_(fileName)
 		{
-			id_ = load();
+			id_ = load(fileName);
 		}
 
 		Texture::~Texture()
 		{
-			GLCall(glDeleteTextures(1, &id_));
 		}
 
-		void Texture::bind(unsigned int slot) const
+		void Texture::bind() const
 		{
 			GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 			GLCall(glBindTexture(GL_TEXTURE_2D, id_));
@@ -25,8 +26,19 @@ namespace piligrim {
 			GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 		}
 
-		GLuint Texture::load()
+		GLuint Texture::getId() const
 		{
+			return id_;
+		}
+
+		void Texture::texDelete() const
+		{
+			GLCall(glDeleteTextures(1, &id_));
+		}
+
+		GLuint Texture::load(std::string fileName)
+		{
+			fileName_ = fileName;
 			pixels_ = ImageLoader::load(fileName_, width_, height_);
 
 			GLuint result;

@@ -9,60 +9,29 @@ namespace piligrim {
 
 		Vertex::Vertex(const math::vec3 & position)
 		{
-			position_ = position;
+			this->position = position;
 		}
 
-		Vertex::Vertex(const math::vec3 & position, const math::vec3 & color) 
+		Vertex::Vertex(const math::vec3 & position, const math::vec3 & normal) 
 			: Vertex(position)
 		{
-			color_ = color;
+			this->normal = normal;
 		}
 
-		Vertex::Vertex(const math::vec3 & position, const math::vec3 & color, const math::vec2 & textCoord)
-			: Vertex(position, color)
+		Vertex::Vertex(const math::vec3 & position, const math::vec3 & normal, const math::vec2 & texCoords)
+			: Vertex(position, normal)
 		{
-			textCoord_ = textCoord;
-		}
-		
-
-		math::vec3 Vertex::getPosition() const
-		{
-			return position_;
-		}
-
-		math::vec3 Vertex::getColor() const
-		{
-			return color_;
-		}
-
-		math::vec2 Vertex::getTextCoord() const
-		{
-			return textCoord_;
-		}
-
-		void Vertex::setPos(const math::vec3 & position)
-		{
-			position_ = position;
-		}
-
-		void Vertex::setColor(const math::vec3 & color)
-		{
-			color_ = color;
-		}
-
-		void Vertex::setTextCoord(const math::vec2 & textCoord)
-		{
-			textCoord_ = textCoord;
+			this->texCoords = texCoords;
 		}
 
 		Vertex operator+(const Vertex & left, const Vertex & right)
 		{
-			return Vertex(left.position_ + right.position_);
+			return Vertex(left.position + right.position);
 		}
 
 		Vertex operator-(const Vertex & left, const Vertex & right)
 		{
-			return Vertex(left.position_ - right.position_);
+			return Vertex(left.position - right.position);
 		}
 
 		Vertex & Vertex::operator+=(const Vertex & right)

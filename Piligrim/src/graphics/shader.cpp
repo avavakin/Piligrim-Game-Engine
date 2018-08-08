@@ -73,6 +73,25 @@ void piligrim::graphics::Shader::setUniform(const GLchar * name, const math::mat
 	GLCall(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.elements));
 }
 
+void piligrim::graphics::Shader::setUniform(const GLchar * name, const Material & material)
+{
+	std::string nameString(name);
+	setUniform(	
+		(nameString + ".diffuse").c_str(),
+		static_cast<int>(material.diffuse.slot)
+	);
+
+	setUniform(
+		(nameString + ".specular").c_str(),
+		static_cast<int>(material.specular.slot)
+	);
+
+	setUniform(
+		(nameString + ".shininess").c_str(),
+		material.shininess
+	);
+}
+
 GLuint piligrim::graphics::Shader::load(std::string& errorMessage)
 {
 	GLCall(GLuint program = glCreateProgram());

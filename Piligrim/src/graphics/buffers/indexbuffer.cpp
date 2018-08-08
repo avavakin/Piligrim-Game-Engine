@@ -1,8 +1,17 @@
 #include "indexbuffer.h"
 
-piligrim::graphics::IndexBuffer::IndexBuffer(GLuint *data, GLuint count, GLint drawMode)
-	:count_(count)
+piligrim::graphics::IndexBuffer::IndexBuffer()
 {
+}
+
+piligrim::graphics::IndexBuffer::IndexBuffer(GLuint *data, GLuint count, GLint drawMode)
+{
+	set(data, count, drawMode);
+}
+
+void piligrim::graphics::IndexBuffer::set(GLuint * data, GLuint count, GLint drawMode)
+{
+	count_ = count;
 	GLCall(glGenBuffers(1, &id_));
 	bind();
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, drawMode));

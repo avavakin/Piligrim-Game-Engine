@@ -12,6 +12,7 @@
 #include "src\graphics\buffers\buffers.h"
 #include "src\graphics\renderer\camera\camera.h"
 #include "src\graphics\renderer\models\Mesh.h"
+#include "src\graphics\renderer\models\Material.h"
 #include "src\graphics\renderer\models\Texture.h"
 
 #define WINDOW_WIDTH 1000
@@ -21,7 +22,7 @@ int main()
 {
 	using namespace piligrim;
 	using namespace graphics;
-	using namespace math;
+	using namespace math;;
 
 	Window window("Scott Piligrim vs. World!", WINDOW_WIDTH, WINDOW_HIGHT);
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -29,22 +30,22 @@ int main()
 	GLCall(glEnable(GL_DEPTH_TEST));
 	float cubeEdge = 10;
 	cubeEdge /= 2;
-	float lightPointsSource[] =
+	std::vector<float> lightPointsSource =
 	{
-		cubeEdge, cubeEdge, cubeEdge,
-		-cubeEdge, cubeEdge, cubeEdge,
+		cubeEdge, cubeEdge, cubeEdge,      1.0f,  1.0f,  1.0f,    0.0f, 0.0f,
+		-cubeEdge, cubeEdge, cubeEdge,    -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,
 
-		-cubeEdge, -cubeEdge, cubeEdge,
-		cubeEdge, -cubeEdge, cubeEdge,
+		-cubeEdge, -cubeEdge, cubeEdge,   -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,
+		cubeEdge, -cubeEdge, cubeEdge,     1.0f, -1.0f,  1.0f,    0.0f, 0.0f,
 
-		cubeEdge, -cubeEdge, -cubeEdge,
-		cubeEdge, cubeEdge, -cubeEdge,
+		cubeEdge, -cubeEdge, -cubeEdge,    1.0f, -1.0f, -1.0f,    0.0f, 0.0f,
+		cubeEdge, cubeEdge, -cubeEdge,     1.0f,  1.0f, -1.0f,    0.0f, 0.0f,
 
-		-cubeEdge, cubeEdge, -cubeEdge,
-		-cubeEdge, -cubeEdge, -cubeEdge
+		-cubeEdge, cubeEdge, -cubeEdge,   -1.0f,  1.0f, -1.0f,    0.0f, 0.0f,
+		-cubeEdge, -cubeEdge, -cubeEdge,  -1.0f, -1.0f, -1.0f,    0.0f, 0.0f,
 	};
 
-	float meshPointsSource[] =
+	std::vector<float> meshPointsSource =
 	{
 		// FRONT
 		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
@@ -95,7 +96,7 @@ int main()
 		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  1.0f
 	};
 
-	unsigned int lightIndeciesSource[] =
+	std::vector<unsigned int> lightIndeciesSource =
 	{
 		// FRONT
 		0, 1, 2,
@@ -117,22 +118,47 @@ int main()
 		2, 3, 4
 	};
 
+	std::vector<unsigned int> meshIndeciesSource =
+	{
+		0,1,2,
+		3,4,5,
+
+		6,7,8,
+		9,10,11,
+
+		12,13,14,
+		15,16,17,
+
+		18,19,20,
+		21,22,23,
+
+		24,25,26,
+		27,28,29,
+
+		30,31,32,
+		33,34,35
+	};
+	//
 	vec3 figureCenter(0,0,0);
+	Mesh figure;
+
+	figure.set(meshPointsSource);
+	figure.set(meshIndeciesSource);
+	figure.init();
+
+	Texture boxDiffuse("res/test/diffuse.jpg");
+	boxDiffuse.slot = 0;
+	Texture boxSpecular("res/test/specular.jpg");
+	boxSpecular.slot = 1;
+
+	figure.set({ boxDiffuse, boxSpecular });
+	//
 	vec3 lightCenter(cubeEdge*2, cubeEdge*3, cubeEdge*2);
+	Mesh sun;
 
-	VertexArray spriteFigure, spriteLightSource;
-	IndexBuffer lightIbo(lightIndeciesSource, sizeof(lightIndeciesSource) / sizeof(unsigned int));
-
-	spriteFigure.setBuffer(new Buffer(meshPointsSource, sizeof(meshPointsSource)/sizeof(float)));
-	spriteFigure.addBufferAttributes(0, 3, 8 * sizeof(float), 0); // positions
-	spriteFigure.addBufferAttributes(1, 3, 8 * sizeof(float), 3 * sizeof(float)); // normals
-	spriteFigure.addBufferAttributes(2, 2, 8 * sizeof(float), 6 * sizeof(float)); // texture coords
-
-	Texture boxDiffuse("C:/Users/Arkady/Desktop/test/diffuse.jpg");
-	Texture boxSpecular("C:/Users/Arkady/Desktop/test/specular.jpg");
-
-	spriteLightSource.setBuffer(new Buffer(lightPointsSource, sizeof(lightPointsSource)/sizeof(float)));
-	spriteLightSource.addBufferAttributes(0, 3, 0, 0);
+	sun.set(lightPointsSource);
+	sun.set(lightIndeciesSource);
+	sun.init();
 
 
 	// Shaders BEGIN
@@ -151,11 +177,16 @@ int main()
 
 	shaderMesh.setUniform("u_pr_matrix", persp);
 
-	shaderMesh.setUniform("u_material.ambient", vec3(0.2f, 0.8f, 0.2f));
+	Material cubeMaterial;
+	cubeMaterial.diffuse = boxDiffuse;
+	cubeMaterial.specular = boxSpecular;
+	cubeMaterial.shininess = 32.0f;
+	shaderMesh.setUniform("u_material", cubeMaterial);
+	/*
 	shaderMesh.setUniform("u_material.diffuse", 0);
 	shaderMesh.setUniform("u_material.specular", 1);
 	shaderMesh.setUniform("u_material.shininess", 32.0f);
-
+	*/
 	shaderMesh.setUniform("u_light.ambient", vec3(0.2f, 0.2f, 0.2f));
 	shaderMesh.setUniform("u_light.diffuse", vec3(0.5f, 0.5f, 0.5f));
 	shaderMesh.setUniform("u_light.specular", vec3(1.0f, 1.0f, 1.0f));
@@ -172,7 +203,7 @@ int main()
 	shaderLight.enable();
 	shaderLight.setUniform("u_pr_matrix", persp);
 	// Shader END
-	Camera cam(vec3(0,0,cubeEdge*3), vec3(0,0,0));
+	Camera cam(vec3(cubeEdge * 6, cubeEdge * 6, cubeEdge * 6), vec3(0,0,0));
 
 	float camSpeed = 50;
 
@@ -254,49 +285,39 @@ int main()
 			cam.setPosition(cam.getPosition() + vec3(0.f, 1.f, 0.f) * camSpeed * deltaTime);
 		}
 
-
-		shaderMesh.enable();
-		shaderMesh.setUniform("u_vw_matrix", cam.getMatrix());
-		/*
-		lightCenter = vec3(
-			cos(glfwGetTime())*lightRad, 
-			cos(glfwGetTime())*lightRad, 
-			sin(glfwGetTime())*lightRad
-		);
-		*/
-		shaderMesh.setUniform("u_light.position", lightCenter);
-		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
-		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter));
-
-		boxDiffuse.bind(0);
-		boxSpecular.bind(1);
-		spriteFigure.bind();
-
-		glDrawArrays(GL_TRIANGLES, 0, sizeof(meshPointsSource) / sizeof(float) / 8);
-
-		spriteFigure.unbind();
-		boxSpecular.unbind();
-		boxDiffuse.unbind();
-
-		shaderMesh.disable();
+		if (window.isKeyPressed(GLFW_KEY_P)) {
+			LOG(cam.getPosition().x << " " << cam.getPosition().y << " " << cam.getPosition().z);
+		}
+		if (window.isKeyPressed(GLFW_KEY_C)) {
+			camDir = -cam.getPosition()+vec3(0.0f, 0.0f, 0.0f);
+		}
 
 		shaderLight.enable();
 		shaderLight.setUniform("u_vw_matrix", cam.getMatrix());
 		shaderLight.setUniform("u_ml_matrix", mat4::translation(lightCenter) * mat4::scale(vec3(0.2f, 0.2f, 0.2f)));
 		shaderLight.setUniform("light_color", vec4(1.0, 1.0, 1.0, 1.0));
 
-		spriteLightSource.bind();
-
-		lightIbo.bind();
-		glDrawElements(GL_TRIANGLES, lightIbo.getCount(), GL_UNSIGNED_INT, 0);
-		lightIbo.unbind();
-
-		spriteLightSource.unbind();
+		sun.draw(shaderLight);
 
 		shaderLight.disable();
 
+
+		shaderMesh.enable();
+
+		shaderMesh.setUniform("u_vw_matrix", cam.getMatrix());
+		shaderMesh.setUniform("u_light.position", lightCenter);
+		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
+		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter));
+
+		figure.draw(shaderMesh);
+
+		shaderMesh.disable();
+
+		
+
 		window.update();
 	}
-
+	boxDiffuse.texDelete();
+	boxSpecular.texDelete();
 	return 0;
 }
