@@ -21,14 +21,14 @@ namespace piligrim {
 
 		float Cube::getSide() const
 		{
-			return side_;
+			return side_ * 2;
 		}
 
 
 
 		void Cube::changeSide(float side)
 		{
-			side_ = side;
+			side_ = side / 2;
 			
 			verticies_[0].vertex.position  = math::vec3(-side_, -side_, -side_); 
 			verticies_[1].vertex.position  = math::vec3( side_, -side_, -side_); 

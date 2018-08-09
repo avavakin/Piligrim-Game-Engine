@@ -30,7 +30,7 @@ int main()
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 
 	GLCall(glEnable(GL_DEPTH_TEST));
-	float cubeEdge = 10;
+	float cubeEdge = 20;
 
 	vec3 figureCenter(0,0,0);
 	Cube figure(cubeEdge);
@@ -43,7 +43,7 @@ int main()
 
 	figure.set({ boxDiffuse, boxSpecular });
 
-	vec3 lightCenter(cubeEdge*2, cubeEdge*3, cubeEdge*2);
+	vec3 lightCenter(cubeEdge, cubeEdge * 1.5f, cubeEdge);
 	Cube sun(cubeEdge * 0.2f);
 	sun.init(MeshConfig::NOTHING);
 
@@ -87,7 +87,7 @@ int main()
 	shaderLight.setUniform("u_pr_matrix", persp);
 	// Shader END
 
-	Camera cam(vec3(cubeEdge * 6, cubeEdge * 6, cubeEdge * 6), vec3(0,0,0));
+	Camera cam(vec3(cubeEdge * 3, cubeEdge * 3, cubeEdge * 3), vec3(0,0,0));
 
 	float camSpeed = 50;
 	float figureScaleSpeed = 3;
@@ -103,7 +103,6 @@ int main()
 	double x, y;
 	double offsetX, offsetY;
 	double sensitivity = 0.9f;
-	float lightRad = cubeEdge * 4;
 	while (!window.closed())
 	{
 		window.clear();
