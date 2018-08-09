@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 #include <GL/glew.h>
 
@@ -38,6 +39,7 @@ namespace piligrim {
 
 		private:
 			GLuint shader_ = 0;
+			std::map< std::string, GLint > uniformsCache_;
 			std::string vertPath_;
 			std::string fragPath_;
 
