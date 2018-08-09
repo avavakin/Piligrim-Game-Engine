@@ -1,12 +1,6 @@
 #include "Mesh.h"
 namespace piligrim {
 	namespace graphics {
-		
-
-
-		Mesh::Mesh()
-		{
-		}
 
 
 
@@ -111,17 +105,23 @@ namespace piligrim {
 
 
 
-		void Mesh::init()
+		void Mesh::init(MeshConfig config)
 		{
+			config_ = config;
 			ibo.set(indicies_.data(), indicies_.size());
 
 			vao.setBuffer(new Buffer(&verticies_.data()->floats[0], verticies_.size() * VERTEX_FLOATS * sizeof(float)));
-			vao.addBufferAttributes(0, 3, VERTEX_FLOATS * sizeof(float), 0); // positions
-			vao.addBufferAttributes(1, 3, VERTEX_FLOATS * sizeof(float), 3 * sizeof(float)); // normals
-			vao.addBufferAttributes(2, 2, VERTEX_FLOATS * sizeof(float), 6 * sizeof(float)); // texture coords
+
+			vao.addBufferAttributes(0, 3, VERTEX_FLOATS * sizeof(float), 0);
+			if (config & MeshConfig::NORMALS == MeshConfig::NORMALS) {
+				vao.addBufferAttributes(1, 3, VERTEX_FLOATS * sizeof(float), 3 * sizeof(float));
+			}
+			if (config & MeshConfig::TEXCOORDS == MeshConfig::TEXCOORDS) {
+				vao.addBufferAttributes(2, 2, VERTEX_FLOATS * sizeof(float), 6 * sizeof(float));
+			}
 		}
 
 
-		
+
 	}
 }

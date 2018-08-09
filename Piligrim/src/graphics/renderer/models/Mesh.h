@@ -12,11 +12,16 @@
 namespace piligrim {
 	namespace graphics {
 
+		enum MeshConfig : bool {
+			NOTHING = 0b00,
+			NORMALS = 0b01,
+			TEXCOORDS = 0b10,
+			ALL = 0b11
+		};
+
 		class Mesh : public IDrawable
 		{
 		public:
-			Mesh();
-
 			void set(const std::vector<VertexUnion>& verticies);
 			void set(const std::vector<Vertex>& verticies);
 			void set(const std::vector<float>& verticies);
@@ -31,13 +36,15 @@ namespace piligrim {
 			std::vector<unsigned int> const & getIndicies() const;
 
 			void draw(Shader &shader);
-			void init();
+			void init(MeshConfig config = MeshConfig::ALL);
 
-		private:
+		protected:
 			std::vector<VertexUnion> verticies_;
 			std::vector<unsigned int> indicies_;
 			std::vector<Texture> textures_;
+			MeshConfig config_;
 
+		private:
 			VertexArray vao;
 			IndexBuffer ibo;
 		};
