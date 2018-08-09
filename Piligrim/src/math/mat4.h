@@ -1,8 +1,11 @@
 #pragma once
+#include <iostream>
+
 #include "vec3.h"
 #include "vec4.h"
-#include <iostream>
+
 #define MAT4_N 4
+
 namespace piligrim {
 	namespace math {
 

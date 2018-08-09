@@ -4,26 +4,33 @@
 namespace piligrim {
 	namespace math {
 
+
+
 		mat4::mat4()
 		{
 		}
+
+
 
 		mat4::mat4(float diagonal)
 		{
 			for (unsigned char i = 0; i < MAT4_N * MAT4_N; i++) {
 				if (i % (MAT4_N + 1) != 0) {
 					elements[i] = 0.0f;
+					continue;
 				}
-				else {
-					elements[i] = diagonal;
-				}
+				elements[i] = diagonal;
 			}
 		}
+
+
 
 		mat4 mat4::identity()
 		{
 			return mat4(1.0f);
 		}
+
+
 
 		mat4 mat4::orthographic(float left, float right, float top, float bottom, float near, float far)
 		{
@@ -39,6 +46,8 @@ namespace piligrim {
 
 			return result;
 		}
+
+
 
 		mat4 mat4::perspective(float fov, float aspectRatio, float near, float far)
 		{
@@ -59,16 +68,20 @@ namespace piligrim {
 			return result;
 		}
 
+
+
 		mat4 mat4::translation(const vec3 & translation)
 		{
 			mat4 result(1.0f);
-
+			
 			result.elements[0 + 3 * MAT4_N] = translation.x;
 			result.elements[1 + 3 * MAT4_N] = translation.y;
 			result.elements[2 + 3 * MAT4_N] = translation.z;
 
 			return result;
 		}
+
+
 
 		mat4 mat4::rotation(const vec3 & axis, float angle)
 		{
@@ -110,6 +123,8 @@ namespace piligrim {
 			return result;
 		}
 
+
+
 		mat4 mat4::scale(const vec3 & scale)
 		{
 			mat4 result(1.0f);
@@ -120,6 +135,8 @@ namespace piligrim {
 
 			return result;
 		}
+
+
 
 		mat4 operator*(const mat4 & left, const mat4 & right)
 		{
@@ -137,6 +154,8 @@ namespace piligrim {
 			return result;
 		}
 
+
+
 		mat4 operator+(const mat4 & left, const mat4 & right)
 		{
 			mat4 result;
@@ -145,8 +164,10 @@ namespace piligrim {
 				result.elements[i] = left.elements[i] + right.elements[i];
 			}
 
-			return mat4();
+			return result;
 		}
+
+
 
 		mat4 operator-(const mat4 & left, const mat4 & right)
 		{
@@ -156,8 +177,10 @@ namespace piligrim {
 				result.elements[i] = left.elements[i] - right.elements[i];
 			}
 
-			return mat4();
+			return result;
 		}
+
+
 
 		mat4 & mat4::operator*=(const mat4 & right)
 		{
@@ -166,18 +189,25 @@ namespace piligrim {
 			return *this;
 		}
 
+
+
 		mat4 & mat4::operator+=(const mat4 & right)
 		{
 			*this = *this + right;
 
 			return *this;
 		}
+
+
+
 		mat4 & mat4::operator-=(const mat4 & right)
 		{
 			*this = *this - right;
 
 			return *this;
 		}
+
+
 
 		std::ostream & operator<<(std::ostream & s, const mat4 & matr)
 		{
@@ -190,5 +220,8 @@ namespace piligrim {
 
 			return s;
 		}
+
+
+
 	}
 }

@@ -4,10 +4,14 @@
 namespace piligrim {
 	namespace math {
 
+
+
 		vec3::vec3()
 			:x(0), y(0), z(0)
 		{
 		}
+
+
 
 		vec3::vec3(float x, float y, float z)
 		{
@@ -16,10 +20,14 @@ namespace piligrim {
 			this->z = z;
 		}
 
+
+
 		double vec3::scalProduct(const vec3 & right) const
 		{
 			return this->x * right.x + this->y * right.y + this->z * right.z;
 		}
+
+
 
 		vec3 vec3::crossProduct(const vec3 & right) const
 		{
@@ -32,10 +40,14 @@ namespace piligrim {
 			return temp;
 		}
 
+
+
 		double vec3::length() const
 		{
 			return sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
 		}
+
+
 
 		double vec3::distTo(const vec3 & right) const
 		{
@@ -45,6 +57,8 @@ namespace piligrim {
 
 			return sqrt(subsX*subsX + subsY*subsY + subsZ*subsZ);;
 		}
+
+
 
 		vec3 vec3::getNormalize() const
 		{
@@ -56,30 +70,42 @@ namespace piligrim {
 			return *this;
 		}
 
+
+
 		vec3 operator+(const vec3 & left, const vec3 & right)
 		{
 			return vec3(left.x + right.x, left.y + right.y, left.z + right.z);
 		}
+
+
 
 		vec3 operator-(const vec3 & left, const vec3 & right)
 		{
 			return vec3(left.x - right.x, left.y - right.y, left.z - right.z);
 		}
 
+
+
 		vec3 operator*(const vec3 & left, double scal)
 		{
 			return vec3(left.x * scal, left.y * scal, left.z * scal);
 		}
+
+
 
 		vec3 operator/(const vec3 & left, double scal)
 		{
 			return vec3(left.x / scal, left.y / scal, left.z / scal);
 		}
 
+
+
 		vec3 operator-(const vec3 & vec)
 		{
 			return vec3(-vec.x, -vec.y, -vec.z);
 		}
+
+
 
 		vec3 & vec3::operator+=(const vec3 & right)
 		{
@@ -90,6 +116,8 @@ namespace piligrim {
 			return *this;
 		}
 
+
+
 		vec3 & vec3::operator-=(const vec3 & right)
 		{
 			this->x -= right.x;
@@ -98,6 +126,8 @@ namespace piligrim {
 
 			return *this;
 		}
+
+
 
 		vec3& vec3::operator*=(double scal)
 		{
@@ -108,6 +138,8 @@ namespace piligrim {
 			return *this;
 		}
 
+
+
 		vec3 & vec3::operator/=(double scal)
 		{
 			this->x /= scal;
@@ -117,14 +149,21 @@ namespace piligrim {
 			return *this;
 		}
 
+
+
 		bool operator==(const vec3 & left, const vec3 & right)
 		{
 			return left.x == right.x && left.y == right.y && left.z == right.z;
 		}
 
+
+
 		bool operator!=(const vec3 & left, const vec3 & right)
 		{
 			return !(left == right);
 		}
+
+
+
 	}
 }
