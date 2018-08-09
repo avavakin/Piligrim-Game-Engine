@@ -10,10 +10,12 @@
 #include "src\graphics\window.h"
 #include "src\graphics\shader.h"
 #include "src\graphics\buffers\buffers.h"
+
 #include "src\graphics\renderer\camera\camera.h"
 #include "src\graphics\renderer\models\Mesh.h"
 #include "src\graphics\renderer\models\Material.h"
 #include "src\graphics\renderer\models\Texture.h"
+#include "src\graphics\renderer\models\meshes\Cube.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HIGHT (WINDOW_WIDTH * 9 / 16)
@@ -29,121 +31,9 @@ int main()
 
 	GLCall(glEnable(GL_DEPTH_TEST));
 	float cubeEdge = 10;
-	cubeEdge /= 2;
-	std::vector<float> lightPointsSource =
-	{
-		cubeEdge, cubeEdge, cubeEdge,      1.0f,  1.0f,  1.0f,    0.0f, 0.0f,
-		-cubeEdge, cubeEdge, cubeEdge,    -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,
 
-		-cubeEdge, -cubeEdge, cubeEdge,   -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,
-		cubeEdge, -cubeEdge, cubeEdge,     1.0f, -1.0f,  1.0f,    0.0f, 0.0f,
-
-		cubeEdge, -cubeEdge, -cubeEdge,    1.0f, -1.0f, -1.0f,    0.0f, 0.0f,
-		cubeEdge, cubeEdge, -cubeEdge,     1.0f,  1.0f, -1.0f,    0.0f, 0.0f,
-
-		-cubeEdge, cubeEdge, -cubeEdge,   -1.0f,  1.0f, -1.0f,    0.0f, 0.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge,  -1.0f, -1.0f, -1.0f,    0.0f, 0.0f,
-	};
-
-	std::vector<float> meshPointsSource =
-	{
-		// FRONT
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,   0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,   0.0f,  0.0f, -1.0f,     0.0f,  1.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,   0.0f,  0.0f, -1.0f,     0.0f,  1.0f,
-		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  1.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
-
-		// BACK
-		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,   0.0f,  0.0f,  1.0f,     1.0f,  0.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
-		-cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,     0.0f,  1.0f,
-		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
-		 
-		// LEFT
-		-cubeEdge,  cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
-		-cubeEdge,  cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge, -1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
-		-cubeEdge, -cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
-		-cubeEdge,  cubeEdge,  cubeEdge, -1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
-
-		// RIGHT
-		cubeEdge,  cubeEdge,  cubeEdge,   1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,   1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,   1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,   1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,   1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,   1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
-		 
-		// BOTTOM
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,     0.0f,  0.0f,
-		cubeEdge, -cubeEdge, -cubeEdge,   0.0f, -1.0f,  0.0f,     1.0f,  0.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,   0.0f, -1.0f,  0.0f,     1.0f,  1.0f,
-		cubeEdge, -cubeEdge,  cubeEdge,   0.0f, -1.0f,  0.0f,     1.0f,  1.0f,
-		-cubeEdge, -cubeEdge,  cubeEdge,  0.0f, -1.0f,  0.0f,     0.0f,  1.0f,
-		-cubeEdge, -cubeEdge, -cubeEdge,  0.0f, -1.0f,  0.0f,     0.0f,  0.0f,
-
-		// TOP
-		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  1.0f,
-		cubeEdge,  cubeEdge, -cubeEdge,   0.0f,  1.0f,  0.0f,     1.0f,  1.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
-		cubeEdge,  cubeEdge,  cubeEdge,   0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
-		-cubeEdge,  cubeEdge,  cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  0.0f,
-		-cubeEdge,  cubeEdge, -cubeEdge,  0.0f,  1.0f,  0.0f,     0.0f,  1.0f
-	};
-
-	std::vector<unsigned int> lightIndeciesSource =
-	{
-		// FRONT
-		0, 1, 2,
-		2, 0, 3,
-		// RIGHT
-		3, 5, 0,
-		3, 4, 5,
-		// BACK
-		4, 7, 5,
-		7, 5, 6,
-		// LEFT
-		2, 1, 6,
-		7, 2, 6,
-		// TOP
-		1, 5, 6,
-		1, 5, 0,
-		// BOTTOM
-		2, 4, 7,
-		2, 3, 4
-	};
-
-	std::vector<unsigned int> meshIndeciesSource =
-	{
-		0,1,2,
-		3,4,5,
-
-		6,7,8,
-		9,10,11,
-
-		12,13,14,
-		15,16,17,
-
-		18,19,20,
-		21,22,23,
-
-		24,25,26,
-		27,28,29,
-
-		30,31,32,
-		33,34,35
-	};
-	//
 	vec3 figureCenter(0,0,0);
-	Mesh figure;
-
-	figure.set(meshPointsSource);
-	figure.set(meshIndeciesSource);
+	Cube figure(cubeEdge);
 	figure.init();
 
 	Texture boxDiffuse("res/test/diffuse.jpg");
@@ -152,13 +42,10 @@ int main()
 	boxSpecular.slot = 1;
 
 	figure.set({ boxDiffuse, boxSpecular });
-	//
-	vec3 lightCenter(cubeEdge*2, cubeEdge*3, cubeEdge*2);
-	Mesh sun;
 
-	sun.set(lightPointsSource);
-	sun.set(lightIndeciesSource);
-	sun.init();
+	vec3 lightCenter(cubeEdge*2, cubeEdge*3, cubeEdge*2);
+	Cube sun(cubeEdge * 0.2f);
+	sun.init(MeshConfig::NOTHING);
 
 
 	// Shaders BEGIN
@@ -181,16 +68,12 @@ int main()
 	cubeMaterial.diffuse = boxDiffuse;
 	cubeMaterial.specular = boxSpecular;
 	cubeMaterial.shininess = 32.0f;
+
 	shaderMesh.setUniform("u_material", cubeMaterial);
-	/*
-	shaderMesh.setUniform("u_material.diffuse", 0);
-	shaderMesh.setUniform("u_material.specular", 1);
-	shaderMesh.setUniform("u_material.shininess", 32.0f);
-	*/
 	shaderMesh.setUniform("u_light.ambient", vec3(0.2f, 0.2f, 0.2f));
 	shaderMesh.setUniform("u_light.diffuse", vec3(0.5f, 0.5f, 0.5f));
 	shaderMesh.setUniform("u_light.specular", vec3(1.0f, 1.0f, 1.0f));
-
+	shaderMesh.disable();
 
 	Shader shaderLight("src/shaders/light.vert", "src/shaders/light.frag", shaderErrorMessage);
 	if (!shaderLight.isOk())
@@ -203,9 +86,11 @@ int main()
 	shaderLight.enable();
 	shaderLight.setUniform("u_pr_matrix", persp);
 	// Shader END
+
 	Camera cam(vec3(cubeEdge * 6, cubeEdge * 6, cubeEdge * 6), vec3(0,0,0));
 
 	float camSpeed = 50;
+	float figureScaleSpeed = 3;
 
 	float pitch = 0;
 	float yaw = -90;
@@ -294,13 +179,14 @@ int main()
 
 		shaderLight.enable();
 		shaderLight.setUniform("u_vw_matrix", cam.getMatrix());
-		shaderLight.setUniform("u_ml_matrix", mat4::translation(lightCenter) * mat4::scale(vec3(0.2f, 0.2f, 0.2f)));
+		shaderLight.setUniform("u_ml_matrix", mat4::translation(lightCenter));
 		shaderLight.setUniform("light_color", vec4(1.0, 1.0, 1.0, 1.0));
 
 		sun.draw(shaderLight);
 
 		shaderLight.disable();
 
+		figure.changeSide(cubeEdge * (1 + sin(glfwGetTime()*figureScaleSpeed) / 4));
 
 		shaderMesh.enable();
 
@@ -317,7 +203,9 @@ int main()
 
 		window.update();
 	}
+
 	boxDiffuse.texDelete();
 	boxSpecular.texDelete();
+
 	return 0;
 }
