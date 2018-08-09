@@ -28,15 +28,21 @@ namespace piligrim {
 			}
 		}
 
+
+
 		Window::~Window()
 		{
 			glfwTerminate();
 		}
 
+
+
 		void Window::clear() const
 		{
 			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		}
+
+
 
 		void Window::update()
 		{
@@ -44,42 +50,58 @@ namespace piligrim {
 			glfwSwapBuffers(window_);
 		}
 
+
+
 		bool Window::closed() const
 		{
 			return glfwWindowShouldClose(window_) == 1;
 		}
+
+
 
 		int Window::getWidth() const
 		{
 			return width_;
 		}
 
+
+
 		int Window::getHeight() const
 		{
 			return height_;
 		}
+
+
 
 		bool Window::isKeyPressed(unsigned short keycode)
 		{
 			if (keycode >= MAX_KEYS) {
 				return false;
 			}
+
 			return keys_[keycode];
 		}
+
+
 
 		bool Window::isMouseButtonPressed(unsigned short buttoncode)
 		{
 			if (buttoncode >= MAX_MOUSE_BUTTONS) {
 				return false;
 			}
+
 			return mouseButtons_[buttoncode];
 		}
+
+
 
 		void Window::getMousePosition(double & x, double & y)
 		{
 			x = mouseX_;
 			y = mouseY_;
 		}
+
+
 
 		bool Window::init()
 		{
@@ -112,10 +134,14 @@ namespace piligrim {
 			return true;
 		}
 
+
+
 		void window_resize(GLFWwindow * window, int width, int height)
 		{
 			GLCall(glViewport(0, 0, width, height));
 		}
+
+
 
 		void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 		{
@@ -123,11 +149,15 @@ namespace piligrim {
 			win->keys_[key] = action != GLFW_RELEASE;
 		}
 
+
+
 		void mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
 		{
 			Window *win = (Window*)glfwGetWindowUserPointer(window);
 			win->mouseButtons_[button] = action != GLFW_RELEASE;
 		}
+
+
 
 		void cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
 		{
@@ -135,6 +165,8 @@ namespace piligrim {
 			win->mouseX_ = xpos;
 			win->mouseY_ = ypos;
 		}
+
+
 
 	}
 }

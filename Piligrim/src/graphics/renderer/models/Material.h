@@ -1,7 +1,10 @@
 #pragma once
+
 #include "Texture.h"
+
 namespace piligrim {
 	namespace graphics {
+
 		struct Material
 		{
 		public:
@@ -9,5 +12,6 @@ namespace piligrim {
 			Texture specular;
 			float shininess;
 		};
+
 	}
 }

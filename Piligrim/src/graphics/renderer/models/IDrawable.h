@@ -2,7 +2,9 @@
 
 namespace piligrim {
 	namespace graphics {
+
 		class Shader;
+
 		class IDrawable
 		{
 		public:

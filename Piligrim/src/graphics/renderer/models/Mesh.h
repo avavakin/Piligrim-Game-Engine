@@ -20,7 +20,6 @@ namespace piligrim {
 			void set(const std::vector<VertexUnion>& verticies);
 			void set(const std::vector<Vertex>& verticies);
 			void set(const std::vector<float>& verticies);
-
 			void set(const std::vector<unsigned int>& indicies);
 			void set(const std::vector<Texture> textures);
 
@@ -38,6 +37,7 @@ namespace piligrim {
 			std::vector<VertexUnion> verticies_;
 			std::vector<unsigned int> indicies_;
 			std::vector<Texture> textures_;
+
 			VertexArray vao;
 			IndexBuffer ibo;
 		};

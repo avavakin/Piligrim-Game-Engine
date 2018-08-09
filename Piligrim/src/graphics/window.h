@@ -13,6 +13,7 @@ namespace piligrim {
 
 #define MAX_KEYS			1024
 #define MAX_MOUSE_BUTTONS	32
+
 		class Window
 		{
 		public:
@@ -33,7 +34,7 @@ namespace piligrim {
 		private:
 			std::string title_;
 			int width_, height_;
-			GLFWwindow *window_;
+			GLFWwindow* window_;
 			bool closed_;
 
 			static bool keys_[MAX_KEYS];

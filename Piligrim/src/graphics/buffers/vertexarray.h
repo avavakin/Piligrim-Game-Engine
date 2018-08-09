@@ -9,6 +9,7 @@
 
 namespace piligrim {
 	namespace graphics {
+
 		class VertexArray {
 		public:
 			VertexArray();
@@ -25,5 +26,6 @@ namespace piligrim {
 			GLuint id_;
 			Buffer* buffer_;
 		};
+
 	}
 }

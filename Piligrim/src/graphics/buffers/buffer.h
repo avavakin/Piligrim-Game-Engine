@@ -6,6 +6,7 @@
 
 namespace piligrim {
 	namespace graphics {
+
 		class Buffer {
 		public:
 			Buffer(GLvoid *data, GLuint size, GLint drawMode = GL_STATIC_DRAW);
@@ -16,5 +17,6 @@ namespace piligrim {
 		private:
 			GLuint id_;
 		};
+
 	}
 }

@@ -15,16 +15,20 @@ namespace piligrim {
 		public:
 			Texture();
 			Texture(std::string fileName);
-			~Texture();
 
 			void bind() const;
 			void unbind() const;
 
 			GLuint getId() const;
+			unsigned int getWidth() const;
+			unsigned int getHeight() const;
+
 			void texDelete() const;
-			GLuint load(std::string fileName);
+			void load(std::string fileName);
+
 		public:
 			unsigned int slot = 0;
+
 		private:
 			std::string fileName_;
 			GLuint id_;

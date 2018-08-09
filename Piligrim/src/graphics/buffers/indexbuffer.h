@@ -6,11 +6,14 @@
 
 namespace piligrim {
 	namespace graphics {
+
 		class IndexBuffer {
 		public:
 			IndexBuffer();
 			IndexBuffer(GLuint *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
+
 			void set(GLuint *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
+
 			GLuint getCount() const { return count_; }
 
 			void bind() const;
@@ -20,5 +23,6 @@ namespace piligrim {
 			GLuint id_;
 			GLuint count_;
 		};
+
 	}
 }
