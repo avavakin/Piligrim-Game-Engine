@@ -5,6 +5,7 @@ namespace piligrim {
 
 
 		Camera::Camera()
+			: speed_(100.0f)
 		{
 			set(math::vec3(0, 0, 0), math::vec3(0, 0, -1));
 		}
@@ -12,6 +13,7 @@ namespace piligrim {
 
 
 		Camera::Camera(math::vec3 position)
+			: speed_(100.0f)
 		{
 			set(position, position + math::vec3(0.0, 0.0, 1.0));
 		}
@@ -19,6 +21,7 @@ namespace piligrim {
 
 
 		Camera::Camera(math::vec3 position, math::vec3 lookPoint)
+			: speed_(100.0f)
 		{
 			set(position, lookPoint);
 		}
@@ -30,6 +33,11 @@ namespace piligrim {
 			_ASSERT(position != lookPoint);
 			position_ = position;
 			lookAt(lookPoint);
+		}
+
+		void Camera::setSpeed(float speed)
+		{
+			speed_ = speed;
 		}
 
 
@@ -76,6 +84,51 @@ namespace piligrim {
 		void Camera::lookAt(math::vec3 lookPoint)
 		{
 			setLookDir(lookPoint - position_);
+		}
+
+		void Camera::onControllerEvent(Controller* controller, double deltaTime)
+		{
+			bool needMoveForward  = controller->isKeyActive(KeyRole::Forward);
+
+			bool needMoveBack     = controller->isKeyActive(KeyRole::Back);
+
+			bool needMoveLeft     = controller->isKeyActive(KeyRole::Left);
+
+			bool needMoveRight    = controller->isKeyActive(KeyRole::Right);
+
+			bool needMoveDown     = controller->isKeyActive(KeyRole::Down);
+
+			bool needMoveUp       = controller->isKeyActive(KeyRole::Up);
+
+			bool needLookAtCenter = controller->isKeyActive(KeyRole::Center);
+
+			if (needMoveForward) {
+				setPosition(position_ - backDir_ * speed_ * deltaTime);
+			}
+
+			if (needMoveBack) {
+				setPosition(position_ + backDir_ * speed_ * deltaTime);
+			}
+
+			if (needMoveLeft) {
+				setPosition(position_ - rightDir_ * speed_ * deltaTime);
+			}
+
+			if (needMoveRight) {
+				setPosition(position_ + rightDir_ * speed_ * deltaTime);
+			}
+
+			if (needMoveDown) {
+				setPosition(position_ - math::vec3(0.0f, 1.0f, 0.0f) * speed_ * deltaTime);
+			}
+
+			if (needMoveUp) {
+				setPosition(position_ + math::vec3(0.0f, 1.0f, 0.0f) * speed_ * deltaTime);
+			}
+
+			if (needLookAtCenter) {
+				lookAt(math::vec3(0.0f, 0.0f, 0.0f));
+			}
 		}
 
 

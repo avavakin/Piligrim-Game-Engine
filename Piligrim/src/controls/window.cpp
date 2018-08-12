@@ -1,13 +1,7 @@
 #include "window.h"
 
-#include <iostream>
 namespace piligrim {
-	namespace graphics {
-
-		bool Window::keys_[MAX_KEYS];
-		bool Window::mouseButtons_[MAX_MOUSE_BUTTONS];
-		double Window::mouseX_;
-		double Window::mouseY_;
+	namespace controls {
 
 		Window::Window(const std::string& title, int width, int height)
 		{
@@ -17,14 +11,6 @@ namespace piligrim {
 
 			if (!init()) {
 				glfwTerminate();
-			}
-
-			for (unsigned short i = 0; i < MAX_KEYS; i++) {
-				keys_[i] = false;
-			}
-
-			for (unsigned short i = 0; i < MAX_MOUSE_BUTTONS; i++) {
-				mouseButtons_[i] = false;
 			}
 		}
 
@@ -54,7 +40,7 @@ namespace piligrim {
 
 		bool Window::closed() const
 		{
-			return glfwWindowShouldClose(window_) == 1;
+			return glfwWindowShouldClose(window_) == GLFW_TRUE;
 		}
 
 
@@ -71,34 +57,18 @@ namespace piligrim {
 			return height_;
 		}
 
-
-
-		bool Window::isKeyPressed(unsigned short keycode)
+		void Window::connectController(Controller& controller)
 		{
-			if (keycode >= MAX_KEYS) {
-				return false;
-			}
-
-			return keys_[keycode];
+			controlsTable_ = &controller.controlsTable_;
 		}
 
-
-
-		bool Window::isMouseButtonPressed(unsigned short buttoncode)
+		void Window::onControllerEvent(Controller* controller, double deltaTime)
 		{
-			if (buttoncode >= MAX_MOUSE_BUTTONS) {
-				return false;
+			bool needWindowClose = controller->isKeyActive(KeyRole::Escape);
+
+			if (needWindowClose) {
+				glfwSetWindowShouldClose(window_, GLFW_TRUE);
 			}
-
-			return mouseButtons_[buttoncode];
-		}
-
-
-
-		void Window::getMousePosition(double & x, double & y)
-		{
-			x = mouseX_;
-			y = mouseY_;
 		}
 
 
@@ -145,25 +115,27 @@ namespace piligrim {
 
 		void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 		{
-			Window *win = (Window*) glfwGetWindowUserPointer(window);
-			win->keys_[key] = action != GLFW_RELEASE;
+			Window* win = (Window*) glfwGetWindowUserPointer(window);
+			win->controlsTable_->keyStates[key] = action;
 		}
 
 
 
 		void mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
 		{
-			Window *win = (Window*)glfwGetWindowUserPointer(window);
-			win->mouseButtons_[button] = action != GLFW_RELEASE;
+			Window* win = (Window*)glfwGetWindowUserPointer(window);
+
+			win->controlsTable_->keyStates[button] = action;
 		}
 
 
 
 		void cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
 		{
-			Window *win = (Window*)glfwGetWindowUserPointer(window);
-			win->mouseX_ = xpos;
-			win->mouseY_ = ypos;
+			Window* win = (Window*)glfwGetWindowUserPointer(window);
+
+			win->x_ = xpos;
+			win->y_ = ypos;
 		}
 
 

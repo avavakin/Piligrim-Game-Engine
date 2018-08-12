@@ -1,6 +1,8 @@
 #pragma once
 #define GLEW_STATIC
+#include <iostream>
 #include <string>
+#include <map>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -8,13 +10,14 @@
 #include "../utils/logs.h"
 #include "../utils/glcall.h"
 
+#include "controllers/Controller.h"
+#include "controllers/IControlsObserver.h"
+
 namespace piligrim { 
-	namespace graphics {
+	namespace controls {
 
-#define MAX_KEYS			1024
-#define MAX_MOUSE_BUTTONS	32
 
-		class Window
+		class Window : public IControlsObserver
 		{
 		public:
 			Window(const std::string& title, int width, int height);
@@ -27,9 +30,9 @@ namespace piligrim {
 			int getWidth() const;
 			int getHeight() const;
 
-			static bool isKeyPressed(unsigned short keycode);
-			static bool isMouseButtonPressed(unsigned short buttoncode);
-			static void getMousePosition(double &x, double&y);
+			void connectController(Controller& controller);
+
+			void onControllerEvent(Controller* controller, double deltaTime);
 
 		private:
 			std::string title_;
@@ -37,10 +40,10 @@ namespace piligrim {
 			GLFWwindow* window_;
 			bool closed_;
 
-			static bool keys_[MAX_KEYS];
-			static bool mouseButtons_[MAX_MOUSE_BUTTONS];
-			static double mouseX_, mouseY_;
+			float x_;
+			float y_;
 
+			ControlsTable* controlsTable_;
 		private:
 			bool init();
 

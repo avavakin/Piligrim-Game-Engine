@@ -7,7 +7,8 @@
 #include "src\math\mat4.h"
 #include "src\math\math_func.h"
 
-#include "src\graphics\window.h"
+#include "src\controls\window.h"
+
 #include "src\graphics\shader.h"
 #include "src\graphics\buffers\buffers.h"
 
@@ -17,14 +18,17 @@
 #include "src\graphics\renderer\models\Texture.h"
 #include "src\graphics\renderer\models\meshes\Cube.h"
 
+
+
 #define WINDOW_WIDTH 1000
 #define WINDOW_HIGHT (WINDOW_WIDTH * 9 / 16)
 
 int main()
 {
 	using namespace piligrim;
+	using namespace controls;
 	using namespace graphics;
-	using namespace math;;
+	using namespace math;
 
 	Window window("Scott Piligrim vs. World!", WINDOW_WIDTH, WINDOW_HIGHT);
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -36,12 +40,17 @@ int main()
 	Cube figure(cubeEdge);
 	figure.init();
 
-	Texture boxDiffuse("res/test/diffuse.jpg");
-	boxDiffuse.slot = 0;
-	Texture boxSpecular("res/test/specular.jpg");
-	boxSpecular.slot = 1;
+	Texture* boxDiffuse = new Texture("res/test/diffuse.jpg", 0);
+	Texture* boxSpecular = new Texture("res/test/specular.jpg", 1);
 
-	figure.set({ boxDiffuse, boxSpecular });
+	figure.addTexture(boxDiffuse);
+	figure.addTexture(boxSpecular);
+
+
+	Material cubeMaterial;
+	cubeMaterial.diffuse = boxDiffuse;
+	cubeMaterial.specular = boxSpecular;
+	cubeMaterial.shininess = 32.0f;
 
 	vec3 lightCenter(cubeEdge, cubeEdge * 1.5f, cubeEdge);
 	Cube sun(cubeEdge * 0.2f);
@@ -64,10 +73,6 @@ int main()
 
 	shaderMesh.setUniform("u_pr_matrix", persp);
 
-	Material cubeMaterial;
-	cubeMaterial.diffuse = boxDiffuse;
-	cubeMaterial.specular = boxSpecular;
-	cubeMaterial.shininess = 32.0f;
 
 	shaderMesh.setUniform("u_material", cubeMaterial);
 	shaderMesh.setUniform("u_light.ambient", vec3(0.2f, 0.2f, 0.2f));
@@ -87,22 +92,32 @@ int main()
 	shaderLight.setUniform("u_pr_matrix", persp);
 	// Shader END
 
-	Camera cam(vec3(cubeEdge * 3, cubeEdge * 3, cubeEdge * 3), vec3(0,0,0));
+	figure.setShader(&shaderMesh);
+	sun.setShader(&shaderLight);
 
-	float camSpeed = 50;
+	Camera cam(vec3(cubeEdge * 3, cubeEdge * 3, cubeEdge * 3), vec3(0,0,0));
+	Controller controller;
+
+	controller.addEventObserver(&cam);
+	controller.addEventObserver(&window);
+
 	float figureScaleSpeed = 3;
 
+	/*
+	float camSpeed = 50;
 	float pitch = 0;
 	float yaw = -90;
 
 	vec3 camDir = cam.getLookDir();
 
-	float currentTime, lastTime = glfwGetTime(), deltaTime;
 	double lastX, lastY;
 	window.getMousePosition(lastX, lastY);
 	double x, y;
 	double offsetX, offsetY;
 	double sensitivity = 0.9f;
+	*/
+	float currentTime, lastTime = glfwGetTime(), deltaTime;
+	window.connectController(controller);
 	while (!window.closed())
 	{
 		window.clear();
@@ -111,8 +126,9 @@ int main()
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
-		window.getMousePosition(x, y);
-		
+		controller.update(deltaTime);
+
+		/*
 		offsetX = x - lastX;
 		offsetY = lastY - y;
 
@@ -144,44 +160,13 @@ int main()
 		}
 
 		cam.setLookDir(camDir);
-
-		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
-			break;
-		}
-
-		if (window.isKeyPressed(GLFW_KEY_W)) {
-			cam.setPosition(cam.getPosition() + cam.getLookDir() * camSpeed * deltaTime);
-		}
-		if (window.isKeyPressed(GLFW_KEY_S)) {
-			cam.setPosition(cam.getPosition() - cam.getLookDir() * camSpeed * deltaTime);
-		}
-		if (window.isKeyPressed(GLFW_KEY_A)) {
-			cam.setPosition(cam.getPosition() - cam.getRightDir() * camSpeed * deltaTime);
-		}
-		if (window.isKeyPressed(GLFW_KEY_D)) {
-			cam.setPosition(cam.getPosition() + cam.getRightDir() * camSpeed * deltaTime);
-		}
-
-		if (window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-			cam.setPosition(cam.getPosition() - vec3(0.f, 1.f, 0.f) * camSpeed * deltaTime);
-		}
-		if (window.isKeyPressed(GLFW_KEY_SPACE)) {
-			cam.setPosition(cam.getPosition() + vec3(0.f, 1.f, 0.f) * camSpeed * deltaTime);
-		}
-
-		if (window.isKeyPressed(GLFW_KEY_P)) {
-			LOG(cam.getPosition().x << " " << cam.getPosition().y << " " << cam.getPosition().z);
-		}
-		if (window.isKeyPressed(GLFW_KEY_C)) {
-			camDir = -cam.getPosition()+vec3(0.0f, 0.0f, 0.0f);
-		}
-
+		*/
 		shaderLight.enable();
 		shaderLight.setUniform("u_vw_matrix", cam.getMatrix());
 		shaderLight.setUniform("u_ml_matrix", mat4::translation(lightCenter));
 		shaderLight.setUniform("light_color", vec4(1.0, 1.0, 1.0, 1.0));
 
-		sun.draw(shaderLight);
+		sun.draw();
 
 		shaderLight.disable();
 
@@ -194,17 +179,15 @@ int main()
 		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
 		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter));
 
-		figure.draw(shaderMesh);
+		figure.draw();
 
 		shaderMesh.disable();
 
-		
 
 		window.update();
 	}
-
-	boxDiffuse.texDelete();
-	boxSpecular.texDelete();
+	delete boxDiffuse;
+	delete boxSpecular;
 
 	return 0;
 }
