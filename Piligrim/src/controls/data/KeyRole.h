@@ -5,7 +5,6 @@ namespace piligrim {
 
 		enum KeyRole : __int8
 		{
-			Nothing,
 			Forward,
 			Back,
 			Up,
@@ -14,7 +13,6 @@ namespace piligrim {
 			Left,
 
 			Escape,
-			CursorMove,
 			Center,
 			Print,
 

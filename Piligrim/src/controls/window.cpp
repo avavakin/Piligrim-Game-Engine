@@ -3,6 +3,8 @@
 namespace piligrim {
 	namespace controls {
 
+
+
 		Window::Window(const std::string& title, int width, int height)
 		{
 			title_ = title;
@@ -57,10 +59,14 @@ namespace piligrim {
 			return height_;
 		}
 
+
+
 		void Window::connectController(Controller& controller)
 		{
 			controlsTable_ = &controller.controlsTable_;
 		}
+
+
 
 		void Window::onControllerEvent(Controller* controller, double deltaTime)
 		{
@@ -134,8 +140,11 @@ namespace piligrim {
 		{
 			Window* win = (Window*)glfwGetWindowUserPointer(window);
 
-			win->x_ = xpos;
-			win->y_ = ypos;
+			win->controlsTable_->deltaMove.x = xpos - win->controlsTable_->mousePosition.x;
+			win->controlsTable_->deltaMove.y = win->controlsTable_->mousePosition.y - ypos;
+
+			win->controlsTable_->mousePosition.x = xpos;
+			win->controlsTable_->mousePosition.y = ypos;
 		}
 
 

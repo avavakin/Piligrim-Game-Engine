@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../../math/vec2.h"
-#include "KeyRole.h"
-#include "ControlAction.h"
 
 #define MAX_KEYS_COUNT 1024
 

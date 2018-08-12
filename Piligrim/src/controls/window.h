@@ -2,7 +2,6 @@
 #define GLEW_STATIC
 #include <iostream>
 #include <string>
-#include <map>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -38,10 +37,6 @@ namespace piligrim {
 			std::string title_;
 			int width_, height_;
 			GLFWwindow* window_;
-			bool closed_;
-
-			float x_;
-			float y_;
 
 			ControlsTable* controlsTable_;
 		private:

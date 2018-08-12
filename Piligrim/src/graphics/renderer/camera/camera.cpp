@@ -5,7 +5,7 @@ namespace piligrim {
 
 
 		Camera::Camera()
-			: speed_(100.0f)
+			: speed_(100.0f), sensitivity_(0.9f), yaw_(-90.0f), pitch_(0.0f)
 		{
 			set(math::vec3(0, 0, 0), math::vec3(0, 0, -1));
 		}
@@ -13,7 +13,7 @@ namespace piligrim {
 
 
 		Camera::Camera(math::vec3 position)
-			: speed_(100.0f)
+			: speed_(100.0f), sensitivity_(0.9f), yaw_(-90.0f), pitch_(0.0f)
 		{
 			set(position, position + math::vec3(0.0, 0.0, 1.0));
 		}
@@ -21,7 +21,7 @@ namespace piligrim {
 
 
 		Camera::Camera(math::vec3 position, math::vec3 lookPoint)
-			: speed_(100.0f)
+			: speed_(100.0f), sensitivity_(0.9f), yaw_(-90.0f), pitch_(0.0f)
 		{
 			set(position, lookPoint);
 		}
@@ -38,6 +38,11 @@ namespace piligrim {
 		void Camera::setSpeed(float speed)
 		{
 			speed_ = speed;
+		}
+
+		void Camera::setSensitivity(float sensitivity)
+		{
+			sensitivity_ = sensitivity;
 		}
 
 
@@ -86,20 +91,42 @@ namespace piligrim {
 			setLookDir(lookPoint - position_);
 		}
 
+		void Camera::lookAt(float yaw, float pitch)
+		{
+			math::vec3 newCamDir;
+
+			if (pitch_ > 90.0f) {
+				pitch_ = 90.0f;
+			}
+			else if (pitch_ < -80.0f) {
+				pitch_ = -80.0f;
+			}
+
+			if (yaw_ > 360.0f) {
+				yaw -= 360.0f;
+			}
+
+			if (yaw_ < -360.0f) {
+				yaw += 360.0f;
+			}
+
+			newCamDir = math::vec3(
+				cos(math::toRadians(pitch_)) * cos(math::toRadians(yaw_)),
+				sin(math::toRadians(pitch_)),
+				cos(math::toRadians(pitch_)) * sin(math::toRadians(yaw_))
+			);
+
+			setLookDir(newCamDir);
+		}
+
 		void Camera::onControllerEvent(Controller* controller, double deltaTime)
 		{
 			bool needMoveForward  = controller->isKeyActive(KeyRole::Forward);
-
 			bool needMoveBack     = controller->isKeyActive(KeyRole::Back);
-
 			bool needMoveLeft     = controller->isKeyActive(KeyRole::Left);
-
 			bool needMoveRight    = controller->isKeyActive(KeyRole::Right);
-
 			bool needMoveDown     = controller->isKeyActive(KeyRole::Down);
-
 			bool needMoveUp       = controller->isKeyActive(KeyRole::Up);
-
 			bool needLookAtCenter = controller->isKeyActive(KeyRole::Center);
 
 			if (needMoveForward) {
@@ -128,6 +155,15 @@ namespace piligrim {
 
 			if (needLookAtCenter) {
 				lookAt(math::vec3(0.0f, 0.0f, 0.0f));
+			}
+			else {
+				math::vec2 offset = controller->getMouseDelta();
+				offset *= sensitivity_;
+
+				yaw_ += offset.x;
+				pitch_ += offset.y;
+				
+				lookAt(yaw_, pitch_);
 			}
 		}
 

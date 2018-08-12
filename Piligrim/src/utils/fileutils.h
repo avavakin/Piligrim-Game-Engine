@@ -6,9 +6,13 @@ namespace piligrim {
 	class FileUtils
 	{
 	public:
-		static std::string readFile(std::string filepath)
+
+		static std::string readFile(const std::string& filepath)
 		{
 			FILE * file = fopen(filepath.c_str(), "rt");
+			if (file == nullptr) {
+				throw std::invalid_argument("Invalid path to file!");
+			}
 			fseek(file, 0, SEEK_END);
 			unsigned long length = ftell(file);
 			char *data = new char[length + 1];
@@ -23,6 +27,7 @@ namespace piligrim {
 
 			return result;
 		}
+
 	};
 
 }

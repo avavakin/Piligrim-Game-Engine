@@ -10,5 +10,10 @@ namespace piligrim {
 			return angle * (M_PI / 180.0f);
 		}
 
+		inline float toDegrees(float angle)
+		{
+			return angle * (180.0f / M_PI);
+		}
+
 	}
 }
