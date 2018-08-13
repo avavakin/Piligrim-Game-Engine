@@ -38,50 +38,19 @@ namespace piligrim{
 
 		void Config::load(std::string path)
 		{
-			std::string config = FileUtils::readFile(path);
 			std::pair<KeyRole, int> binding;
-			while (config.size() != 0) {
-				binding = getNextBinding(config);
+			std::string keyRole, keyCode;
+			std::ifstream file(path);
+
+			if (!file.is_open()) {
+				throw std::invalid_argument("Invalid file path! <" + path + ">");
+			}
+			while (!file.eof()) {
+				FileUtils::readTwoDividedWords(file, keyRole, keyCode);
+				binding.first = parseKeyRole(keyRole);
+				binding.second = parseKeyCode(keyCode);
 				bindings_[binding.first] = binding.second;
 			}
-		}
-
-
-
-		std::pair<KeyRole, int> Config::getNextBinding(std::string & config)
-		{
-			std::pair<KeyRole, int> binding;
-			unsigned int charId = 0;
-			unsigned int confLength = config.size();
-			std::string word = "";
-
-			for (; charId < confLength && config[charId] != ':'; charId++) {
-				word += config[charId];
-			}
-			charId++;
-			for (; charId < confLength && config[charId] == ' '; charId++);
-
-			if (charId >= confLength) {
-				throw std::invalid_argument(invalidConfigMessage);
-			}
-
-			binding.first = parseKeyRole(word);
-			word = "";
-
-			if (charId >= confLength) {
-				throw std::invalid_argument(invalidConfigMessage);
-			}
-
-			for (; charId < confLength && config[charId] != '\n'; charId++) {
-				word += config[charId];
-			}
-			for (; charId < confLength &&(config[charId] == '\n' || config[charId] == ' ') ; charId++);
-
-			binding.second = parseKeyCode(word);
-
-			config = config.substr(charId, config.size() - charId);
-
-			return binding;
 		}
 
 
@@ -143,11 +112,11 @@ namespace piligrim{
 				return GLFW_KEY_SPACE;
 			}
 
-			if (_strcmpi(str.c_str(), "Left Shift") == 0) {
+			if (_strcmpi(str.c_str(), "Left_Shift") == 0) {
 				return GLFW_KEY_LEFT_SHIFT;
 			}
 
-			if (_strcmpi(str.c_str(), "Right Shift") == 0) {
+			if (_strcmpi(str.c_str(), "Right_Shift") == 0) {
 				return GLFW_KEY_RIGHT_SHIFT;
 			}
 

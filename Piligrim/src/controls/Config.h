@@ -22,7 +22,6 @@ namespace piligrim {
 			int bindings_[KeyRole::MaxKeyRole];
 
 		private:
-			std::pair<KeyRole, int> getNextBinding(std::string &config);
 			KeyRole parseKeyRole(const std::string& word);
 			int parseKeyCode(const std::string& word);
 		};
