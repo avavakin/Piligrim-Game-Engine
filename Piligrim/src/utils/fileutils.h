@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <fstream>
 
 namespace piligrim {
 
@@ -27,7 +28,12 @@ namespace piligrim {
 
 			return result;
 		}
-
+		
+		static void readTwoDividedWords(std::ifstream& file, std::string& first, std::string& second)
+		{
+			file >> first;
+			file >> second >> second;
+		}
 	};
 
 }
