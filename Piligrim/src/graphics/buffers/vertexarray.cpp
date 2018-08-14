@@ -12,14 +12,6 @@ namespace piligrim {
 
 
 
-		VertexArray::~VertexArray()
-		{
-			if (buffer_ != nullptr)
-				delete buffer_;
-		}
-
-
-
 		void VertexArray::setBuffer(Buffer* buffer)
 		{
 			buffer_ = buffer;
@@ -51,6 +43,12 @@ namespace piligrim {
 		void VertexArray::unbind() const
 		{
 			GLCall(glBindVertexArray(0));
+		}
+
+		void VertexArray::deleteBuffer() const
+		{
+			if (buffer_ != nullptr)
+				delete buffer_;
 		}
 
 

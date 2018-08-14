@@ -13,7 +13,6 @@ namespace piligrim {
 		class VertexArray {
 		public:
 			VertexArray();
-			~VertexArray();
 
 			void setBuffer(Buffer* buffer);
 
@@ -21,6 +20,8 @@ namespace piligrim {
 
 			void bind() const;
 			void unbind() const;
+
+			void deleteBuffer() const;
 
 		private:
 			GLuint id_;
