@@ -1,23 +1,24 @@
 #include <iostream>
+#include <regex>
 
-#include "src\utils\logs.h"
-#include "src\utils\fileutils.h"
-#include "src\utils\glcall.h"
+#include "src/utils/logs.h"
+#include "src/utils/fileutils.h"
+#include "src/utils/glcall.h"
 
-#include "src\math\mat4.h"
-#include "src\math\math_func.h"
+#include "src/math/mat4.h"
 
-#include "src\controls\window.h"
+#include "src/controls/window.h"
 
-#include "src\graphics\shader.h"
-#include "src\graphics\buffers\buffers.h"
+#include "src/graphics/shader.h"
+#include "src/graphics/buffers/buffers.h"
 
-#include "src\graphics\renderer\camera\camera.h"
-#include "src\graphics\renderer\models\Mesh.h"
-#include "src\graphics\renderer\models\Material.h"
-#include "src\graphics\renderer\models\Texture.h"
-#include "src\graphics\renderer\models\meshes\Cube.h"
+#include "src/graphics/renderer/camera/camera.h"
+#include "src/graphics/renderer/models/Mesh.h"
+#include "src/graphics/renderer/models/Material.h"
+#include "src/graphics/renderer/models/Texture.h"
+#include "src/graphics/renderer/models/meshes/Cube.h"
 
+#include "src/resources managment/Parser.h"
 
 
 #define WINDOW_WIDTH 1000
@@ -37,8 +38,11 @@ int main()
 	float cubeEdge = 20;
 
 	vec3 figureCenter(0,0,0);
-	Cube figure(cubeEdge);
-	figure.init();
+	// Cube figure(cubeEdge)
+	LOG_TIME_CHECK_MS(
+	Mesh figure = Parser::parseMesh("res/meshes/cube.obj");
+	);
+	//figure.init();
 
 	Texture* boxDiffuse = new Texture("res/test/diffuse.jpg", 0);
 	Texture* boxSpecular = new Texture("res/test/specular.jpg", 1);
@@ -97,25 +101,22 @@ int main()
 
 	Camera cam(vec3(cubeEdge * 3, cubeEdge * 3, cubeEdge * 3), vec3(0,0,0));
 	Controller controller;
+	Config config;
+	try {
+		LOG_TIME_CHECK_MS(config.load("res/controls.conf"));
+	}
+	catch (std::exception e) {
+		LOG_ER(e.what());
+		system("pause");
+		return 0;
+	}
 
+	controller.setConfig(config);
 	controller.addEventObserver(&cam);
 	controller.addEventObserver(&window);
 
 	float figureScaleSpeed = 3;
 
-	/*
-	float camSpeed = 50;
-	float pitch = 0;
-	float yaw = -90;
-
-	vec3 camDir = cam.getLookDir();
-
-	double lastX, lastY;
-	window.getMousePosition(lastX, lastY);
-	double x, y;
-	double offsetX, offsetY;
-	double sensitivity = 0.9f;
-	*/
 	float currentTime, lastTime = glfwGetTime(), deltaTime;
 	window.connectController(controller);
 	while (!window.closed())
@@ -128,39 +129,6 @@ int main()
 
 		controller.update(deltaTime);
 
-		/*
-		offsetX = x - lastX;
-		offsetY = lastY - y;
-
-		lastX = x;
-		lastY = y;
-
-		offsetX *= sensitivity;
-		offsetY *= sensitivity;
-
-		yaw += offsetX;
-		if (offsetY != 0) {
-			pitch += offsetY;
-			if (pitch > 90) {
-				pitch = 90;
-			}
-			else if (pitch < -80) {
-				pitch = -80;
-			}
-			camDir = vec3(
-				cos(toRadians(pitch)) * cos(toRadians(yaw)),
-				sin(toRadians(pitch)),
-				cos(toRadians(pitch)) * sin(toRadians(yaw))
-			);
-		}
-		else if (offsetX != 0)
-		{
-			camDir.x = cos(toRadians(pitch)) * cos(toRadians(yaw));
-			camDir.z = cos(toRadians(pitch)) * sin(toRadians(yaw));
-		}
-
-		cam.setLookDir(camDir);
-		*/
 		shaderLight.enable();
 		shaderLight.setUniform("u_vw_matrix", cam.getMatrix());
 		shaderLight.setUniform("u_ml_matrix", mat4::translation(lightCenter));
@@ -170,7 +138,7 @@ int main()
 
 		shaderLight.disable();
 
-		figure.changeSide(cubeEdge * (1 + sin(glfwGetTime()*figureScaleSpeed) / 4));
+		//figure.changeSide(cubeEdge * (1 + sin(glfwGetTime()*figureScaleSpeed) / 4)); TODO
 
 		shaderMesh.enable();
 
@@ -186,8 +154,12 @@ int main()
 
 		window.update();
 	}
+
 	delete boxDiffuse;
 	delete boxSpecular;
+
+	figure.deleteBuffer();
+	sun.deleteBuffer();
 
 	return 0;
 }
