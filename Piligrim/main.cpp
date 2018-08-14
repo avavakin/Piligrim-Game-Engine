@@ -38,11 +38,10 @@ int main()
 	float cubeEdge = 20;
 
 	vec3 figureCenter(0,0,0);
-	// Cube figure(cubeEdge)
+
 	LOG_TIME_CHECK_MS(
 	Mesh figure = Parser::parseMesh("res/meshes/cube.obj");
 	);
-	//figure.init();
 
 	Texture* boxDiffuse = new Texture("res/test/diffuse.jpg", 0);
 	Texture* boxSpecular = new Texture("res/test/specular.jpg", 1);
@@ -138,14 +137,13 @@ int main()
 
 		shaderLight.disable();
 
-		//figure.changeSide(cubeEdge * (1 + sin(glfwGetTime()*figureScaleSpeed) / 4)); TODO
-
+		double newEdge = cubeEdge * (1 + sin(glfwGetTime()*figureScaleSpeed) / 4);
 		shaderMesh.enable();
 
 		shaderMesh.setUniform("u_vw_matrix", cam.getMatrix());
 		shaderMesh.setUniform("u_light.position", lightCenter);
 		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
-		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter));
+		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter) * mat4::scale(vec3(newEdge, newEdge, newEdge)));
 
 		figure.draw();
 
