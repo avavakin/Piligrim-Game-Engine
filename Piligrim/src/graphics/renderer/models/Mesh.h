@@ -19,14 +19,17 @@ namespace piligrim {
 			ALL = 0b11
 		};
 
-		class Mesh : public IDrawable
+		class Mesh : IDrawable
 		{
 		public:
-			void set(const std::vector<VertexUnion>& verticies);
-			void set(const std::vector<Vertex>& verticies);
-			void set(const std::vector<float>& verticies);
-			void set(const std::vector<unsigned int>& indicies);
-			void set(const std::vector<Texture> textures);
+			void setVerticies(const std::vector<VertexUnion>& verticies);
+			void setVerticies(const std::vector<Vertex>& verticies);
+			void setVerticies(const std::vector<float>& verticies);
+			void setIndicies(const std::vector<unsigned int>& indicies);
+
+			void addTexture(Texture* texture);
+			void addVertex(const Vertex& vertex);
+			void addPolygon(unsigned int first, unsigned int second, unsigned int third);
 
 			Vertex getVertex(unsigned int id) const;
 
@@ -35,14 +38,18 @@ namespace piligrim {
 
 			std::vector<unsigned int> const & getIndicies() const;
 
-			void draw(Shader &shader);
+			void setShader(Shader* shader);
+
+			void draw();
 			void init(MeshConfig config = MeshConfig::ALL);
+			void deleteBuffer() const;
 
 		protected:
 			std::vector<VertexUnion> verticies_;
 			std::vector<unsigned int> indicies_;
-			std::vector<Texture> textures_;
+			std::vector<Texture*> textures_;
 			MeshConfig config_;
+			Shader* shader_;
 
 		private:
 			VertexArray vao;

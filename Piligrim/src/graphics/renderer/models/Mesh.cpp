@@ -4,14 +4,14 @@ namespace piligrim {
 
 
 
-		void Mesh::set(const std::vector<VertexUnion>& verticies)
+		void Mesh::setVerticies(const std::vector<VertexUnion>& verticies)
 		{
 			verticies_ = verticies;
 		}
 
 
 
-		void Mesh::set(const std::vector<Vertex>& verticies)
+		void Mesh::setVerticies(const std::vector<Vertex>& verticies)
 		{			
 			unsigned int vertSize = verticies.size();
 			verticies_.resize(vertSize);
@@ -23,7 +23,7 @@ namespace piligrim {
 
 
 
-		void Mesh::set(const std::vector<float>& verticies)
+		void Mesh::setVerticies(const std::vector<float>& verticies)
 		{
 			unsigned int vertSize = verticies.size() / VERTEX_FLOATS;
 			verticies_.resize(vertSize);
@@ -39,16 +39,34 @@ namespace piligrim {
 
 
 
-		void Mesh::set(const std::vector<unsigned int>& indicies)
+		void Mesh::setIndicies(const std::vector<unsigned int>& indicies)
 		{
 			indicies_ = indicies;
 		}
 
 
 
-		void Mesh::set(const std::vector<Texture> textures)
+		void Mesh::addTexture(Texture * texture)
 		{
-			textures_ = textures;
+			textures_.push_back(texture);
+		}
+
+
+
+		void Mesh::addVertex(const Vertex & vertex)
+		{
+			VertexUnion newVert;
+			newVert.vertex = vertex;
+			verticies_.push_back(newVert);
+		}
+
+
+
+		void Mesh::addPolygon(unsigned int first, unsigned int second, unsigned int third)
+		{
+			indicies_.push_back(first);
+			indicies_.push_back(second);
+			indicies_.push_back(third);
 		}
 
 
@@ -79,14 +97,19 @@ namespace piligrim {
 			return indicies_;
 		}
 
+		void Mesh::setShader(Shader * shader)
+		{
+			shader_ = shader;
+		}
 
 
-		void Mesh::draw(Shader& shader)
+
+		void Mesh::draw()
 		{
 			unsigned short texSize = textures_.size();
 
 			for (unsigned int texId = 0; texId < texSize; texId++) {
-				textures_[texId].bind();
+				textures_[texId]->bind();
 			}
 			glActiveTexture(GL_TEXTURE0);
 
@@ -99,7 +122,7 @@ namespace piligrim {
 			vao.unbind();
 
 			for (auto& texture: textures_) {
-				texture.unbind();
+				texture->unbind();
 			}
 		}
 
@@ -119,6 +142,11 @@ namespace piligrim {
 			if (config & MeshConfig::TEXCOORDS == MeshConfig::TEXCOORDS) {
 				vao.addBufferAttributes(2, 2, VERTEX_FLOATS * sizeof(float), 6 * sizeof(float));
 			}
+		}
+
+		void Mesh::deleteBuffer() const
+		{
+			vao.deleteBuffer();
 		}
 
 

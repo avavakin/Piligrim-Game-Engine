@@ -7,33 +7,13 @@ namespace piligrim {
 	class FileUtils
 	{
 	public:
+		FileUtils() = delete;
 
-		static std::string readFile(const std::string& filepath)
-		{
-			FILE * file = fopen(filepath.c_str(), "rt");
-			if (file == nullptr) {
-				throw std::invalid_argument("Invalid path to file!");
-			}
-			fseek(file, 0, SEEK_END);
-			unsigned long length = ftell(file);
-			char *data = new char[length + 1];
+		static std::string readFile(const std::string& filepath);
 
-			memset(data, 0, length + 1);
-			fseek(file, 0, SEEK_SET);
-			fread(data, sizeof(char), length, file);
-			fclose(file);
+		static void readTwoDividedWords(std::ifstream& file, std::string& first, std::string& second);
 
-			std::string result(data);
-			delete[] data;
-
-			return result;
-		}
-		
-		static void readTwoDividedWords(std::ifstream& file, std::string& first, std::string& second)
-		{
-			file >> first;
-			file >> second >> second;
-		}
+		static bool getNextLine(std::ifstream& file, std::string& line);
 	};
 
 }
