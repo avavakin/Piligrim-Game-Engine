@@ -16,12 +16,4 @@ public:
 	Parser() = delete;
 	static Mesh parseMesh(const std::string& path);
 	//static Mesh parseMaterial(const std::string& path);
-private:
-	static void parseVertexInfo(const std::string& str, unsigned int& posId, unsigned int& texId, unsigned int& normId);
-private:
-	static const char vertexRe[];
-	static const char normalRe[];
-	static const char textureRe[];
-	static const char faceRe[];
-	static const char indexRe[];
 };

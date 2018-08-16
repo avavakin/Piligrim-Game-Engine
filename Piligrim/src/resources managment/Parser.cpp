@@ -1,149 +1,102 @@
 #include "Parser.h"
 
-
-
-
-const char Parser::vertexRe[] = "(?:v)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)?";
-const char Parser::normalRe[] = "(?:vn)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)";
-const char Parser::textureRe[] = "(?:vt)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)(\\s+-?[0-9]+\\.[0-9]+)?";
-const char Parser::faceRe[] = "(?:f)(\\s+[0-9]+\/?(?:[0-9]+)?\/?(?:[0-9]+)?)(\\s+[0-9]+\/?(?:[0-9]+)?\/?(?:[0-9]+)?)(\\s+[0-9]+\/?(?:[0-9]+)?\/?(?:[0-9]+)?)";
-const char Parser::indexRe[] = "(?:\\s)?([0-9]+)(?:\/)?([0-9]+)?(?:\/?)([0-9]+)?";
-
 Mesh Parser::parseMesh(const std::string & path)
 {
-
-	std::regex reVertex(vertexRe);
-	std::regex reNormal(normalRe);
-	std::regex reTexture(textureRe);
-	std::regex reFace(faceRe);
-
 	std::ifstream file(path);
 
 	if (!file.is_open()) {
 		throw std::invalid_argument("Path to .obj file is invalide");
 	}
+	Mesh result;
+
+	result.config_ = MeshConfig::NOTHING;
+
+	char mode[64];
+	char symbol = ' ';
 
 	std::vector<vec3> positions;
+	std::vector<vec2> texCoords;
 	std::vector<vec3> normals;
-	std::vector<vec2> textures;
 
-	std::vector<Vertex> verticies;
+	vec3 tempPosition;
+	vec2 tempTexCoord;
+	vec3 tempNormal;
 
-	std::smatch resultRe;
-	std::string line;
-	unsigned int faceId = 0;
+	enum FaceMode : __int8{
+		VERT_ID,
+		TEX_ID,
+		NORM_ID
+	} faceMode;
 
-	MeshConfig config = MeshConfig::NOTHING;
+	int idTemp = 0;
 
-	Mesh result;
-	Vertex vertex;
-	for (unsigned int lineNo = 1; FileUtils::getNextLine(file, line); lineNo++) {
-		if (line.size() < 2) {
-			continue;
+	VertexUnion vertexUnion;
+	unsigned int indexId = 0;
+	while (!file.eof()) {
+		file >> mode;
+		if (mode[0] == 'v' && mode[1] == '\0') {
+			file >> tempPosition.x >> tempPosition.y >> tempPosition.z;
+			positions.push_back(tempPosition);
+			// TODO: send warning about 'w' coordinate
+			while (file.get() != '\n');
 		}
+		else if (mode[0] == 'v' && mode[1] == 't') {
+			file >> tempTexCoord.x >> tempTexCoord.y;
+			texCoords.push_back(tempTexCoord);
+			// TODO: send warning about 'w' coordinate
+			while (file.get() != '\n');
 
-		if (line[0] == 'v' && line[1] == ' ') {
-			if (std::regex_match(line, resultRe, reVertex)) {
-				positions.push_back(
-					vec3(
-						atof(resultRe[1].str().c_str()),
-						atof(resultRe[2].str().c_str()),
-						atof(resultRe[3].str().c_str())
-					)
-				);
-			}
-			else {
-				throw std::invalid_argument("Possition line " + std::to_string(lineNo) + " is invalid.");
-			}
 		}
-		else if (line[0] == 'v' && line[1] == 'n') {
-			if (std::regex_match(line, resultRe, reNormal)) {
-				config = static_cast<MeshConfig>(config | MeshConfig::NORMALS);
-				normals.push_back(
-					vec3(
-						atof(resultRe[1].str().c_str()),
-						atof(resultRe[2].str().c_str()),
-						atof(resultRe[3].str().c_str())
-					)
-				);
-			}
-			else {
-				throw std::invalid_argument("Normal line " + std::to_string(lineNo) + " is invalid.");
-			}
+		else if (mode[0] == 'v' && mode[1] == 'n') {
+			file >> tempNormal.x >> tempNormal.y >> tempNormal.z;
+			normals.push_back(tempNormal);
 		}
-		else if (line[0] == 'v' && line[1] == 't') {
-			if (std::regex_match(line, resultRe, reTexture)) {
-				config = static_cast<MeshConfig>(config | MeshConfig::TEXCOORDS);
-				textures.push_back(
-					vec2(
-						atof(resultRe[1].str().c_str()),
-						atof(resultRe[2].str().c_str())
-					)
-				);
-			}
-			else {
-				throw std::invalid_argument("Texture line " + std::to_string(lineNo) + " is invalid.");
-			}
-		}
-		else if (line[0] == 'f' && line[1] == ' ') {
-			if (std::regex_match(line, resultRe, reFace)) {
-				unsigned int posId, texId, normId;
-				try {
-					for (unsigned __int8 vertId = 1; vertId <= 3; vertId++) {
-						parseVertexInfo(resultRe[vertId].str(), posId, texId, normId);
-						vertex.position = positions[posId];
-
-						if (config & MeshConfig::TEXCOORDS) {
-							vertex.texCoords = textures[texId];
-						}
-						else {
-							vertex.texCoords = vec2(0.0f, 0.0f);
-						}
-
-						if (config & MeshConfig::NORMALS) {
-							vertex.normal = normals[normId];
-						}
-						else {
-							vertex.normal = vec3(0.0f, 0.0f, 0.0f);
-						}
-
-						verticies.push_back(vertex);
+		else if (mode[0] == 'f' && mode[1] == '\0') {
+			do {
+				symbol = file.get();
+			} while (symbol == ' ');
+			while (symbol != '\n' && !file.eof()) {
+				faceMode = VERT_ID;
+				idTemp = 0;
+				while (symbol != ' ' && symbol != '\n' &&  !file.eof()) {
+					if (symbol != '/') {
+						idTemp *= 10;
+						idTemp += static_cast<int>(symbol - '0');
 					}
-					result.addPolygon(faceId * 3, faceId * 3 + 1, faceId * 3 + 2);
-					faceId++;
+					else {
+						switch (faceMode) {
+						case VERT_ID:
+							vertexUnion.vertex.position = positions[idTemp - 1];
+							faceMode = TEX_ID;
+							break;
+						case TEX_ID:
+							vertexUnion.vertex.texCoords = texCoords[idTemp - 1];
+							result.config_ = static_cast<MeshConfig>(result.config_ | MeshConfig::TEXCOORDS);
+							faceMode = NORM_ID;
+							break;
+						}
+						idTemp = 0;
+					}
+					symbol = file.get();
 				}
-				catch (std::invalid_argument e) {
-					throw std::invalid_argument("Face line " + std::to_string(lineNo) + " is invalid. : " + e.what());
+				if (faceMode == NORM_ID) {
+					vertexUnion.vertex.normal = normals[idTemp - 1];
+					result.config_ = static_cast<MeshConfig>(result.config_ | MeshConfig::NORMALS);
 				}
-
+				idTemp = 0;
+				result.verticies_.push_back(vertexUnion);
+				result.indicies_.push_back(indexId++);
+				while (symbol == ' ' && symbol != '\n' && !file.eof()) {
+					symbol = file.get();
+				}
 			}
-			else {
-				throw std::invalid_argument("Face line " + std::to_string(lineNo) + " is invalid.");
-			}
+		}
+		else {
+			while (file.get() != '\n' && !file.eof())
+				;
 		}
 	}
 
-	result.setVerticies(verticies);
-	result.setConfig(config);
+	file.close();
 	return result;
-}
-
-
-
-void Parser::parseVertexInfo(const std::string & str, unsigned int & posId, unsigned int & texId, unsigned int & normId)
-{
-	std::regex re(indexRe);
-	std::smatch resultRe;
-	if (std::regex_match(str, resultRe, re)) {
-		std::string strPos = resultRe[1].str();
-		std::string strTex = resultRe[2].str();
-		std::string strNorm = resultRe[3].str();
-
-		posId = atoi(strPos.c_str()) - 1;
-		texId = strTex.empty() ? 0 : atoi(strTex.c_str()) - 1;
-		normId = strNorm.empty() ? 0 : atoi(strNorm.c_str()) - 1;
-	}
-	else {
-		throw std::invalid_argument("Invalid vertex data");
-	}
 }
