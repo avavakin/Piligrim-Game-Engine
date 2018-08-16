@@ -1,22 +1,17 @@
 #pragma once
 
-namespace piligrim {
-	namespace controls {
+enum KeyRole : __int8
+{
+	Forward,
+	Back,
+	Up,
+	Down,
+	Right,
+	Left,
 
-		enum KeyRole : __int8
-		{
-			Forward,
-			Back,
-			Up,
-			Down,
-			Right,
-			Left,
+	Escape,
+	Center,
+	Print,
 
-			Escape,
-			Center,
-			Print,
-
-			MaxKeyRole
-		};
-	}
-}
+	MaxKeyRole
+};

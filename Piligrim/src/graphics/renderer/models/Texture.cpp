@@ -1,83 +1,80 @@
 #include "Texture.h"
 
-namespace piligrim {
-	namespace graphics {
+
+
+Texture::Texture(std::string fileName, unsigned int slot)
+	: slot_(slot)
+{
+	load(fileName);
+}
+
+Texture::~Texture()
+{
+	GLCall(glDeleteTextures(1, &id_));
+}
 
 
 
-		Texture::Texture()
-		{
-		}
+void Texture::bind() const
+{
+	GLCall(glActiveTexture(GL_TEXTURE0 + slot_));
+	GLCall(glBindTexture(GL_TEXTURE_2D, id_));
+}
 
 
 
-		Texture::Texture(std::string fileName)
-		{
-			load(fileName);
-		}
+void Texture::unbind() const
+{
+	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
 
 
 
-		void Texture::bind() const
-		{
-			GLCall(glActiveTexture(GL_TEXTURE0 + slot));
-			GLCall(glBindTexture(GL_TEXTURE_2D, id_));
-		}
+GLuint Texture::getId() const
+{
+	return id_;
+}
 
 
 
-		void Texture::unbind() const
-		{
-			GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-		}
+unsigned int Texture::getWidth() const
+{
+	return width_;
+}
 
 
 
-		GLuint Texture::getId() const
-		{
-			return id_;
-		}
+unsigned int Texture::getHeight() const
+{
+	return height_;
+}
+
+unsigned int Texture::getSlot() const
+{
+	return slot_;
+}
 
 
 
-		unsigned int Texture::getWidth() const
-		{
-			return width_;
-		}
+void Texture::setSlot(unsigned int slot)
+{
+	slot_ = slot;
+}
 
 
 
-		unsigned int Texture::getHeight() const
-		{
-			return height_;
-		}
+void Texture::load(std::string fileName)
+{
+	fileName_ = fileName;
+	pixels_ = ImageLoader::load(fileName_, width_, height_);
 
+	GLCall(glGenTextures(1, &id_));
+	GLCall(glBindTexture(GL_TEXTURE_2D, id_));
 
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 
-		void Texture::texDelete() const
-		{
-			GLCall(glDeleteTextures(1, &id_));
-		}
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width_, height_, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels_));
 
-
-
-		void Texture::load(std::string fileName)
-		{
-			fileName_ = fileName;
-			pixels_ = ImageLoader::load(fileName_, width_, height_);
-
-			GLCall(glGenTextures(1, &id_));
-			GLCall(glBindTexture(GL_TEXTURE_2D, id_));
-
-			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-
-			GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width_, height_, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels_));
-
-			GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-		}
-
-
-
-	}
+	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }

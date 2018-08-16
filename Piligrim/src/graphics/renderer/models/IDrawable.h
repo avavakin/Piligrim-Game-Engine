@@ -1,15 +1,8 @@
 #pragma once
+class Shader;
 
-namespace piligrim {
-	namespace graphics {
-
-		class Shader;
-
-		class IDrawable
-		{
-		public:
-			virtual void draw(Shader&) = 0;
-		};
-
-	}
-}
+class IDrawable
+{
+public:
+	virtual void draw() = 0;
+};

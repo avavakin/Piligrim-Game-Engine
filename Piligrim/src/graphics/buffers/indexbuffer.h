@@ -4,25 +4,19 @@
 
 #include "../../utils/glcall.h"
 
-namespace piligrim {
-	namespace graphics {
+class IndexBuffer {
+public:
+	IndexBuffer() {};
+	IndexBuffer(GLuint *data, GLuint count, GLenum drawMode = GL_STATIC_DRAW);
 
-		class IndexBuffer {
-		public:
-			IndexBuffer();
-			IndexBuffer(GLuint *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
+	void set(GLuint *data, GLuint count, GLenum drawMode = GL_STATIC_DRAW);
 
-			void set(GLuint *data, GLuint count, GLint drawMode = GL_STATIC_DRAW);
+	GLuint getCount() const { return count_; }
 
-			GLuint getCount() const { return count_; }
+	void bind() const;
+	void unbind() const;
 
-			void bind() const;
-			void unbind() const;
-
-		private:
-			GLuint id_;
-			GLuint count_;
-		};
-
-	}
-}
+private:
+	GLuint id_;
+	GLuint count_;
+};

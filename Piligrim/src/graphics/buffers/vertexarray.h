@@ -7,26 +7,20 @@
 #include "../../utils/glcall.h"
 #include "buffer.h"
 
-namespace piligrim {
-	namespace graphics {
+class VertexArray {
+public:
+	VertexArray();
 
-		class VertexArray {
-		public:
-			VertexArray();
+	void setBuffer(Buffer* buffer);
 
-			void setBuffer(Buffer* buffer);
+	void addBufferAttributes(GLuint index, GLuint elementCount, GLsizei stride, GLuint leftPaddingInBytes);
 
-			void addBufferAttributes(GLuint index, GLuint elementCount, GLsizei stride, GLuint leftPaddingInBytes);
+	void bind() const;
+	void unbind() const;
 
-			void bind() const;
-			void unbind() const;
+	void deleteBuffer() const;
 
-			void deleteBuffer() const;
-
-		private:
-			GLuint id_;
-			Buffer* buffer_;
-		};
-
-	}
-}
+private:
+	GLuint id_;
+	Buffer* buffer_;
+};

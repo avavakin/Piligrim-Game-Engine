@@ -7,35 +7,29 @@
 #include "../../../utils/imageload.h"
 #include "../../../utils/glcall.h"
 
-namespace piligrim {
-	namespace graphics {
+class Texture
+{
+public:
+	Texture(std::string fileName, unsigned int slot = 0);
+	~Texture();
 
-		struct Texture
-		{
-		public:
-			Texture();
-			Texture(std::string fileName);
+	void bind() const;
+	void unbind() const;
 
-			void bind() const;
-			void unbind() const;
+	GLuint getId() const;
+	unsigned int getWidth() const;
+	unsigned int getHeight() const;
+	unsigned int getSlot() const;
 
-			GLuint getId() const;
-			unsigned int getWidth() const;
-			unsigned int getHeight() const;
+	void setSlot(unsigned int slot);
 
-			void texDelete() const;
-			void load(std::string fileName);
+	void load(std::string fileName);
 
-		public:
-			unsigned int slot = 0;
-
-		private:
-			std::string fileName_;
-			GLuint id_;
-			unsigned int width_;
-			unsigned int height_;
-			BYTE* pixels_;
-		};
-
-	}
-}
+private:
+	unsigned int slot_;
+	std::string fileName_;
+	GLuint id_;
+	unsigned int width_;
+	unsigned int height_;
+	BYTE* pixels_;
+};

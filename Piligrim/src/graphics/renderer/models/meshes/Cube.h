@@ -20,25 +20,19 @@
 #define CUBE_TOP_VERTEX_MIN 30
 #define CUBE_TOP_VERTEX_MAX 35 
 
-namespace piligrim {
-	namespace graphics {
+class Cube : public Mesh
+{
+public:
+	Cube(float side = 1.0f);
 
-		class Cube : public Mesh
-		{
-		public:
-			Cube(float side = 1.0f);
+	float getSide() const;
 
-			float getSide() const;
+	void changeSide(float side);
 
-			void changeSide(float side);
-
-		private:
-			float side_;
-		private:
-			void setDefaultNormalCoords();
-			void setDefaultTexCoords();
-			void setDefaultIndicies();
-		};
-
-	}
-}
+private:
+	float side_;
+private:
+	void setDefaultNormalCoords();
+	void setDefaultTexCoords();
+	void setDefaultIndicies();
+};

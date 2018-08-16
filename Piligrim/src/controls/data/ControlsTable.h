@@ -4,15 +4,9 @@
 
 #define MAX_KEYS_COUNT 1024
 
-namespace piligrim {
-	namespace controls {
-
-		struct ControlsTable
-		{
-			int keyStates[MAX_KEYS_COUNT];
-			math::vec2 deltaMove;
-			math::vec2 mousePosition;
-		};
-
-	}
-}
+struct ControlsTable
+{
+	int keyStates[MAX_KEYS_COUNT];
+	vec2 deltaMove;
+	vec2 mousePosition;
+};

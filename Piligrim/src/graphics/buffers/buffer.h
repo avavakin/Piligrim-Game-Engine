@@ -4,19 +4,13 @@
 
 #include "../../utils/glcall.h"
 
-namespace piligrim {
-	namespace graphics {
+class Buffer {
+public:
+	Buffer(GLvoid *data, GLuint size, GLenum drawMode = GL_STATIC_DRAW);
 
-		class Buffer {
-		public:
-			Buffer(GLvoid *data, GLuint size, GLint drawMode = GL_STATIC_DRAW);
+	void bind() const;
+	void unbind() const;
 
-			void bind() const;
-			void unbind() const;
-
-		private:
-			GLuint id_;
-		};
-
-	}
-}
+private:
+	GLuint id_;
+};
