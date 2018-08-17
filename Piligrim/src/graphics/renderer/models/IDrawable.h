@@ -1,5 +1,6 @@
 #pragma once
 class Shader;
+struct vec3;
 
 class IDrawable
 {

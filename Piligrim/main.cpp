@@ -13,6 +13,7 @@
 #include "src/graphics/buffers/buffers.h"
 
 #include "src/graphics/renderer/camera/camera.h"
+#include "src//graphics/renderer/models/Model.h"
 #include "src/graphics/renderer/models/Mesh.h"
 #include "src/graphics/renderer/models/Material.h"
 #include "src/graphics/renderer/models/Texture.h"
@@ -26,25 +27,22 @@
 
 int main()
 {
-	using namespace piligrim;
-	using namespace controls;
-	using namespace graphics;
-	using namespace math;
-
 	Window window("Scott Piligrim vs. World!", WINDOW_WIDTH, WINDOW_HIGHT);
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 
 	GLCall(glEnable(GL_DEPTH_TEST));
 	float cubeEdge = 20;
 
-	vec3 figureCenter(0,0,0);
+	vec3 figureCenter(0.0f, 0.0f, 0.0f);
 
 	LOG_TIME_CHECK_MS(
-	Mesh figure = Parser::parseMesh("res/meshes/cube.obj");
+	Mesh figure = Parser::parseMesh("res/meshes/sphere.obj");
 	);
 
-	Texture* boxDiffuse = new Texture("res/test/diffuse.jpg", 0);
-	Texture* boxSpecular = new Texture("res/test/specular.jpg", 1);
+	figure.init(GL_DYNAMIC_DRAW);
+
+	Texture* boxDiffuse = new Texture("res/textures/cube_hs/diffuse.jpg", 0);
+	Texture* boxSpecular = new Texture("res/textures/cube_hs/specular.jpg", 1);
 
 	figure.addTexture(boxDiffuse);
 	figure.addTexture(boxSpecular);
@@ -57,7 +55,8 @@ int main()
 
 	vec3 lightCenter(cubeEdge, cubeEdge * 1.5f, cubeEdge);
 	Cube sun(cubeEdge * 0.2f);
-	sun.init(MeshConfig::NOTHING);
+	sun.setConfig(MeshConfig::NOTHING);
+	sun.init(GL_STATIC_DRAW);
 
 
 	// Shaders BEGIN
@@ -95,9 +94,6 @@ int main()
 	shaderLight.setUniform("u_pr_matrix", persp);
 	// Shader END
 
-	figure.setShader(&shaderMesh);
-	sun.setShader(&shaderLight);
-
 	Camera cam(vec3(cubeEdge * 3, cubeEdge * 3, cubeEdge * 3), vec3(0,0,0));
 	Controller controller;
 	Config config;
@@ -118,6 +114,19 @@ int main()
 
 	float currentTime, lastTime = glfwGetTime(), deltaTime;
 	window.connectController(controller);
+
+	Model cube;
+	cube.setCamera(&cam);
+	cube.setMesh(&figure);
+	cube.setShader(&shaderMesh);
+	cube.setPosition(figureCenter);
+
+	Model lightpoint;
+	lightpoint.setCamera(&cam);
+	lightpoint.setMesh(&sun);
+	lightpoint.setShader(&shaderLight);
+	lightpoint.setPosition(lightCenter);
+
 	while (!window.closed())
 	{
 		window.clear();
@@ -129,23 +138,25 @@ int main()
 		controller.update(deltaTime);
 
 		shaderLight.enable();
-		shaderLight.setUniform("u_vw_matrix", cam.getMatrix());
-		shaderLight.setUniform("u_ml_matrix", mat4::translation(lightCenter));
+		//shaderLight.setUniform("u_vw_matrix", cam.getMatrix());
+		//shaderLight.setUniform("u_translation_matrix", mat4::translation(lightCenter));
 		shaderLight.setUniform("light_color", vec4(1.0, 1.0, 1.0, 1.0));
 
-		sun.draw();
+		lightpoint.rotate(vec3(0.0f, 1.0f, 0.0f), currentTime * 500);
+		lightpoint.draw();
 
 		shaderLight.disable();
 
-		double newEdge = cubeEdge * (1 + sin(glfwGetTime()*figureScaleSpeed) / 4);
+		double newEdge = cubeEdge * (1 + sin(currentTime*figureScaleSpeed) / 4) / 50.0f;
 		shaderMesh.enable();
 
-		shaderMesh.setUniform("u_vw_matrix", cam.getMatrix());
 		shaderMesh.setUniform("u_light.position", lightCenter);
 		shaderMesh.setUniform("u_cam_pos", cam.getPosition());
-		shaderMesh.setUniform("u_ml_matrix", mat4::translation(figureCenter) * mat4::scale(vec3(newEdge, newEdge, newEdge)));
 
-		figure.draw();
+		cube.setPosition(figureCenter + vec3(sinf(currentTime)*60, 0.0f, 0.0f));
+		cube.scale(vec3(newEdge, newEdge, newEdge));
+		cube.rotate(vec3(0.0f, 1.0f, 0.0f), currentTime*100);
+		cube.draw();
 
 		shaderMesh.disable();
 

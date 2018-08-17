@@ -4,8 +4,6 @@
 
 
 
-
-
 Shader::Shader(std::string vertPath, std::string fragmPath)
 	:vertPath_(vertPath), fragPath_(fragmPath)
 {

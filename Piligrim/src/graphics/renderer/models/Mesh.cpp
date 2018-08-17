@@ -97,13 +97,6 @@ std::vector<unsigned int> const & Mesh::getIndicies() const
 
 
 
-void Mesh::setShader(Shader * shader)
-{
-	shader_ = shader;
-}
-
-
-
 void Mesh::setConfig(MeshConfig config)
 {
 	config_ = config;
@@ -111,9 +104,9 @@ void Mesh::setConfig(MeshConfig config)
 
 
 
-void Mesh::setDrawMode(GLenum drawMode)
+bool Mesh::isTextured() const
 {
-	drawMode_ = drawMode;
+	return static_cast<bool>(config_ & MeshConfig::TEXCOORDS);
 }
 
 
@@ -142,11 +135,11 @@ void Mesh::draw()
 
 
 
-void Mesh::init()
+void Mesh::init(GLenum drawMode)
 {
-	ibo.set(indicies_.data(), indicies_.size(), drawMode_);
+	ibo.set(indicies_.data(), indicies_.size(), drawMode);
 
-	vao.setBuffer(new Buffer(&verticies_.data()->floats[0], verticies_.size() * VERTEX_FLOATS * sizeof(float), drawMode_));
+	vao.setBuffer(new Buffer(&verticies_.data()->floats[0], verticies_.size() * VERTEX_FLOATS * sizeof(float), drawMode));
 
 	vao.addBufferAttributes(0, 3, VERTEX_FLOATS * sizeof(float), 0);
 	if (config_ & MeshConfig::NORMALS) {

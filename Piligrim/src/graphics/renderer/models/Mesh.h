@@ -35,23 +35,24 @@ public:
 
 	std::vector<unsigned int> const & getIndicies() const;
 
-	void setShader(Shader* shader);
 	void setConfig(MeshConfig config);
-	void setDrawMode(GLenum drawMode);
+	bool isTextured() const;
 
 	void draw();
-	void init();
+	
+	void init(GLenum drawMode);
 	void deleteBuffer() const;
 
 protected:
-	std::vector<VertexUnion> verticies_;
-	std::vector<unsigned int> indicies_;
-	std::vector<Texture*> textures_;
-	MeshConfig config_;
-	GLenum drawMode_;
-	Shader* shader_;
+	std::vector<VertexUnion> verticies_; //
+	std::vector<unsigned int> indicies_; //
+	std::vector<Texture*> textures_; //
+
+	MeshConfig config_; 
 
 private:
 	VertexArray vao;
 	IndexBuffer ibo;
+
+	friend class Parser;
 };
