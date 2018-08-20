@@ -19,8 +19,11 @@
 class Window : public IControlsObserver
 {
 public:
+	Window();
 	Window(const std::string& title, int width, int height);
 	~Window();
+
+	void set(const std::string& title, int width, int height);
 
 	void clear() const;
 	void update();

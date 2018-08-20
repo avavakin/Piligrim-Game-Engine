@@ -10,8 +10,10 @@ class Config
 {
 public:
 	Config();
+	Config(const std::string& path);
+
 	int getKeyCode(KeyRole key) const;
-	void load(std::string path);
+	void load(const std::string& path);
 
 	static char invalidConfigMessage[];
 

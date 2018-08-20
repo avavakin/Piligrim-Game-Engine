@@ -1,6 +1,23 @@
 #include "window.h"
 
+Window::Window()
+	:title_("Sample text"), height_(600), width_(800)
+{
+}
+
 Window::Window(const std::string& title, int width, int height)
+{
+	set(title, width, height);
+}
+
+
+
+Window::~Window()
+{
+	glfwTerminate();
+}
+
+void Window::set(const std::string & title, int width, int height)
 {
 	title_ = title;
 	height_ = height;
@@ -9,13 +26,9 @@ Window::Window(const std::string& title, int width, int height)
 	if (!init()) {
 		glfwTerminate();
 	}
-}
 
-
-
-Window::~Window()
-{
-	glfwTerminate();
+	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+	GLCall(glEnable(GL_DEPTH_TEST));
 }
 
 

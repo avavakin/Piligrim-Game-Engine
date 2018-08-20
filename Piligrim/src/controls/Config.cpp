@@ -25,6 +25,14 @@ Config::Config()
 
 
 
+Config::Config(const std::string & path)
+	: Config()
+{
+	load(path);
+}
+
+
+
 int Config::getKeyCode(KeyRole key) const
 {
 	return bindings_[key];
@@ -32,7 +40,7 @@ int Config::getKeyCode(KeyRole key) const
 
 
 
-void Config::load(std::string path)
+void Config::load(const std::string& path)
 {
 	std::pair<KeyRole, int> binding;
 	std::string keyRole, keyCode;
