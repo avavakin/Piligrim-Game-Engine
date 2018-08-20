@@ -20,6 +20,14 @@ vec4::vec4(float x, float y, float z, float w)
 	this->w = w;
 }
 
+vec4::vec4(const vec3 & vec, float w)
+{
+	this->x = vec.x;
+	this->y = vec.y;
+	this->z = vec.z;
+	this->w = w;
+}
+
 
 
 vec4 operator+(const vec4 & left, const vec4 & right)

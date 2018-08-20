@@ -7,6 +7,7 @@ struct vec3
 	float z;
 
 	vec3();
+	vec3(float value);
 	vec3(float x, float y, float z);
 
 	double scalProduct(const vec3& right) const;
@@ -14,6 +15,10 @@ struct vec3
 	double length() const;
 	double distTo(const vec3& right) const;
 	vec3 getNormalize() const;
+
+	static vec3 ox();
+	static vec3 oy();
+	static vec3 oz();
 
 	friend vec3 operator +(const vec3& left, const vec3& right);
 	friend vec3 operator -(const vec3& left, const vec3& right);

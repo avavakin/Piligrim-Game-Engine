@@ -10,6 +10,7 @@ struct vec4
 
 	vec4();
 	vec4(float x, float y, float z, float w);
+	vec4(const vec3& vec, float w);
 
 	friend vec4 operator +(const vec4& left, const vec4& right);
 	friend vec4 operator -(const vec4& left, const vec4& right);

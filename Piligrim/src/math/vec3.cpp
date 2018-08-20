@@ -10,6 +10,15 @@ vec3::vec3()
 
 
 
+vec3::vec3(float value)
+{
+	this->x = value;
+	this->y = value;
+	this->z = value;
+}
+
+
+
 vec3::vec3(float x, float y, float z)
 {
 	this->x = x;
@@ -65,6 +74,27 @@ vec3 vec3::getNormalize() const
 	}
 
 	return *this;
+}
+
+
+
+vec3 vec3::ox()
+{
+	return vec3(1.0f, 0.0f, 0.0f);
+}
+
+
+
+vec3 vec3::oy()
+{
+	return vec3(0.0f, 1.0f, 0.0f);
+}
+
+
+
+vec3 vec3::oz()
+{
+	return vec3(0.0f, 0.0f, 1.0f);
 }
 
 
