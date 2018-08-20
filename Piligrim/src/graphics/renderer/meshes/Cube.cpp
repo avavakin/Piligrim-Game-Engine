@@ -76,32 +76,32 @@ void Cube::setDefaultNormalCoords()
 {
 	for (unsigned __int8 vertId = CUBE_FRONT_VERTEX_MIN;
 		vertId <= CUBE_FRONT_VERTEX_MAX; vertId++) {
-		verticies_[vertId].vertex.normal = vec3(0.0f, 0.0f, -1.0f);
+		verticies_[vertId].vertex.normal = - vec3::oz();
 	}
 
 	for (unsigned __int8 vertId = CUBE_BACK_VERTEX_MIN;
 		vertId <= CUBE_BACK_VERTEX_MAX; vertId++) {
-		verticies_[vertId].vertex.normal = vec3(0.0f, 0.0f, 1.0f);
+		verticies_[vertId].vertex.normal = vec3::oz();
 	}
 
 	for (unsigned __int8 vertId = CUBE_LEFT_VERTEX_MIN;
 		vertId <= CUBE_LEFT_VERTEX_MAX; vertId++) {
-		verticies_[vertId].vertex.normal = vec3(-1.0f, 0.0f, 0.0f);
+		verticies_[vertId].vertex.normal = - vec3::ox();
 	}
 
 	for (unsigned __int8 vertId = CUBE_RIGHT_VERTEX_MIN;
 		vertId <= CUBE_RIGHT_VERTEX_MAX; vertId++) {
-		verticies_[vertId].vertex.normal = vec3(1.0f, 0.0f, 0.0f);
+		verticies_[vertId].vertex.normal = vec3::ox();
 	}
 
 	for (unsigned __int8 vertId = CUBE_BOTTOM_VERTEX_MIN;
 		vertId <= CUBE_BOTTOM_VERTEX_MAX; vertId++) {
-		verticies_[vertId].vertex.normal = vec3(0.0f, -1.0f, 0.0f);
+		verticies_[vertId].vertex.normal = - vec3::oy();
 	}
 
 	for (unsigned __int8 vertId = CUBE_TOP_VERTEX_MIN;
 		vertId <= CUBE_TOP_VERTEX_MAX; vertId++) {
-		verticies_[vertId].vertex.normal = vec3(0.0f, 1.0f, 0.0f);
+		verticies_[vertId].vertex.normal = vec3::oy();
 	}
 }
 

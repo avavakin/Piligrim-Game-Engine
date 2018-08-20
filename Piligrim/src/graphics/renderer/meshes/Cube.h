@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Mesh.h"
+#include "Mesh.h"
 
 #define CUBE_FRONT_VERTEX_MIN 0
 #define CUBE_FRONT_VERTEX_MAX 5

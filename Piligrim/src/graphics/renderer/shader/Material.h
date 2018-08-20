@@ -1,10 +1,10 @@
 #pragma once
-#include "Texture.h"
+#include "../meshes/Texture.h"
 
 struct Material
 {
 public:
-	Texture * diffuse;
+	Texture* diffuse;
 	Texture* specular;
 	float shininess;
 };

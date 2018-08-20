@@ -3,9 +3,9 @@
 
 #include "../../../math/math.h"
 #include "../../buffers/buffers.h"
-#include "../../shader.h"
+#include "../shader/shader.h"
 
-#include "IDrawable.h"
+#include "../IDrawable.h"
 #include "Vertex.h"
 #include "Texture.h"
 

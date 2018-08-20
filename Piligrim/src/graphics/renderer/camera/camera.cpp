@@ -5,7 +5,7 @@
 Camera::Camera()
 	: speed_(100.0f), sensitivity_(0.9f), yaw_(-90.0f), pitch_(0.0f)
 {
-	set(vec3(0, 0, 0), vec3(0, 0, -1));
+	set(vec3(0.0f), - vec3::oz());
 }
 
 
@@ -13,7 +13,7 @@ Camera::Camera()
 Camera::Camera(vec3 position)
 	: speed_(100.0f), sensitivity_(0.9f), yaw_(-90.0f), pitch_(0.0f)
 {
-	set(position, position + vec3(0.0, 0.0, 1.0));
+	set(position, position + vec3::oz());
 }
 
 
@@ -33,10 +33,14 @@ void Camera::set(vec3 position, vec3 lookPoint)
 	lookAt(lookPoint);
 }
 
+
+
 void Camera::setSpeed(float speed)
 {
 	speed_ = speed;
 }
+
+
 
 void Camera::setSensitivity(float sensitivity)
 {
@@ -48,7 +52,7 @@ void Camera::setSensitivity(float sensitivity)
 void Camera::setPosition(vec3 position)
 {
 	position_ = position;
-	isMatrixPositionOld_ = true;
+	needCalcMatrixPosition_ = true;
 }
 
 
@@ -63,7 +67,7 @@ vec3 Camera::getPosition() const
 void Camera::setPosX(float x)
 {
 	position_.x = x;
-	isMatrixPositionOld_ = true;
+	needCalcMatrixPosition_ = true;
 }
 
 
@@ -71,7 +75,7 @@ void Camera::setPosX(float x)
 void Camera::setPosY(float y)
 {
 	position_.y = y;
-	isMatrixPositionOld_ = true;
+	needCalcMatrixPosition_ = true;
 }
 
 
@@ -79,7 +83,7 @@ void Camera::setPosY(float y)
 void Camera::setPosZ(float z)
 {
 	position_.z = z;
-	isMatrixPositionOld_ = true;
+	needCalcMatrixPosition_ = true;
 }
 
 
@@ -88,6 +92,8 @@ void Camera::lookAt(vec3 lookPoint)
 {
 	setLookDir(lookPoint - position_);
 }
+
+
 
 void Camera::lookAt(float yaw, float pitch)
 {
@@ -117,6 +123,8 @@ void Camera::lookAt(float yaw, float pitch)
 	setLookDir(newCamDir);
 }
 
+
+
 void Camera::onControllerEvent(Controller* controller, double deltaTime)
 {
 	bool needMoveForward = controller->isKeyActive(KeyRole::Forward);
@@ -144,15 +152,15 @@ void Camera::onControllerEvent(Controller* controller, double deltaTime)
 	}
 
 	if (needMoveDown) {
-		setPosition(position_ - vec3(0.0f, 1.0f, 0.0f) * speed_ * deltaTime);
+		setPosition(position_ - vec3::oy() * speed_ * deltaTime);
 	}
 
 	if (needMoveUp) {
-		setPosition(position_ + vec3(0.0f, 1.0f, 0.0f) * speed_ * deltaTime);
+		setPosition(position_ + vec3::oy() * speed_ * deltaTime);
 	}
 
 	if (needLookAtCenter) {
-		lookAt(vec3(0.0f, 0.0f, 0.0f));
+		lookAt(vec3(0.0f));
 	}
 	else {
 		vec2 offset = controller->getMouseDelta();
@@ -175,10 +183,42 @@ void Camera::setLookDir(vec3 lookDir)
 
 	backDir_ = -lookDir;
 	backDir_ = backDir_.getNormalize();
-	rightDir_ = vec3(0, 1, 0).crossProduct(backDir_).getNormalize();
+	rightDir_ = vec3::oy().crossProduct(backDir_).getNormalize();
 	upDir_ = backDir_.crossProduct(rightDir_);
 
-	isMatrixDirectionOld_ = true;
+	needCalcMatrixDirection_ = true;
+}
+
+
+
+void Camera::setFov(float fov)
+{
+	fovAngle_ = fov;
+	needCalcMatrixProjection_ = true;
+}
+
+
+
+void Camera::setNear(float near)
+{
+	nearPlane_ = near;
+	needCalcMatrixProjection_ = true;
+}
+
+
+
+void Camera::setFar(float far)
+{
+	farPlane_ = far;
+	needCalcMatrixProjection_ = true;
+}
+
+
+
+void Camera::setRatio(float ratio)
+{
+	ratio_ = ratio;
+	needCalcMatrixProjection_ = true;
 }
 
 
@@ -197,19 +237,30 @@ vec3 Camera::getRightDir() const
 
 
 
-mat4 Camera::getMatrix()
+mat4 Camera::calcLookAtMatrix()
 {
-	if (isMatrixDirectionOld_) {
+	if (needCalcMatrixDirection_) {
 		calcMatrixAll();
-		isMatrixPositionOld_ = false;
-		isMatrixDirectionOld_ = false;
+		needCalcMatrixPosition_ = false;
+		needCalcMatrixDirection_ = false;
 	}
-	else if (isMatrixPositionOld_) {
+	else if (needCalcMatrixPosition_) {
 		calcMatrixPositionPart();
-		isMatrixPositionOld_ = false;
+		needCalcMatrixPosition_ = false;
 	}
 
 	return lookAtMatrix_;
+}
+
+
+
+mat4 Camera::calcProjectionMatrix()
+{
+	if (needCalcMatrixProjection_) {
+		projectionMatrix_ = mat4::perspective(fovAngle_, ratio_, nearPlane_, farPlane_);
+		needCalcMatrixProjection_ = false;
+	}
+	return projectionMatrix_;
 }
 
 

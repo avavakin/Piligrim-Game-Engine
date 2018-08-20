@@ -7,16 +7,16 @@ ModelState::ModelState()
 {
 	rotateAxis_.x = 1.0f;
 	rotateAngle_ = 0.0f;
-	scaleVec_ = vec3(1.0f, 1.0f, 1.0f);
+	scaleVec_ = vec3(1.0f);
 }
 
 
 
-void ModelState::calcModelMatrix(Shader& shader)
+void ModelState::calcModelMatrix(Shader* shader)
 {
-	shader.setUniform("u_translation_matrix", calcTransMat());
-	shader.setUniform("u_rotate_matrix",      calcRotateMat());
-	shader.setUniform("u_scale_matrix",       calcScaleMat());
+	shader->setUniform("u_translation_matrix", calcTransMat());
+	shader->setUniform("u_rotate_matrix",      calcRotateMat());
+	shader->setUniform("u_scale_matrix",       calcScaleMat());
 }
 
 

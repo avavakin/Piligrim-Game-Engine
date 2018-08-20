@@ -4,10 +4,10 @@
 #include <vector>
 
 #include "renderer/camera/camera.h"
-#include "renderer/models/IDrawable.h"
-#include "renderer/models/Mesh.h"
-#include "renderer/models/Material.h"
-#include "renderer/models/Texture.h"
+#include "renderer/IDrawable.h"
+#include "renderer/meshes/Mesh.h"
+#include "renderer/shader/Material.h"
+#include "renderer/meshes/Texture.h"
 
 class Scene : IDrawable
 {

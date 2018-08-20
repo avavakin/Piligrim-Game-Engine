@@ -2,14 +2,14 @@
 
 #include "../../../math/math.h"
 
-#include "../../shader.h"
+#include "../shader/shader.h"
 
 class ModelState
 {
 public:
 	ModelState();
 
-	void calcModelMatrix(Shader& shader);
+	void calcModelMatrix(Shader* shader);
 
 	vec3 getPosition() const;
 	vec3 getRotateAxis() const;

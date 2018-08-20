@@ -4,18 +4,15 @@
 
 
 
-Shader::Shader(std::string vertPath, std::string fragmPath)
-	:vertPath_(vertPath), fragPath_(fragmPath)
+Shader::Shader()
 {
-	shader_ = load(std::string());
 }
 
 
 
-Shader::Shader(std::string vertPath, std::string fragmPath, std::string& errorMessage)
-	: vertPath_(vertPath), fragPath_(fragmPath)
+Shader::Shader(std::string vertPath, std::string fragmPath)
+	:vertPath_(vertPath), fragPath_(fragmPath)
 {
-	shader_ = load(errorMessage);
 }
 
 
@@ -23,6 +20,13 @@ Shader::Shader(std::string vertPath, std::string fragmPath, std::string& errorMe
 Shader::~Shader()
 {
 	glDeleteShader(shader_);
+}
+
+
+
+void Shader::compile(std::string& errorMessage)
+{
+	shader_ = load(errorMessage);
 }
 
 
@@ -113,22 +117,44 @@ void Shader::setUniform(const GLchar * name, const mat4 & matrix)
 
 
 
-void Shader::setUniform(const GLchar * name, const Material & material)
+void Shader::setUniform(const std::string& name, const Material & material)
 {
-	std::string nameString(name);
 	setUniform(
-		(nameString + ".diffuse").c_str(),
+		(name + ".diffuse").c_str(),
 		static_cast<int>(material.diffuse->getSlot())
 	);
 
 	setUniform(
-		(nameString + ".specular").c_str(),
+		(name + ".specular").c_str(),
 		static_cast<int>(material.specular->getSlot())
 	);
 
 	setUniform(
-		(nameString + ".shininess").c_str(),
+		(name + ".shininess").c_str(),
 		material.shininess
+	);
+}
+
+void Shader::setUniform(const std::string& name, const Light& light)
+{
+	setUniform(
+		(name + ".position").c_str(),
+		light.position
+	);
+
+	setUniform(
+		(name + ".ambient").c_str(),
+		light.ambient
+	);
+
+	setUniform(
+		(name + ".diffuse").c_str(),
+		light.diffuse
+	);
+
+	setUniform(
+		(name + ".specular").c_str(),
+		light.specular
 	);
 }
 

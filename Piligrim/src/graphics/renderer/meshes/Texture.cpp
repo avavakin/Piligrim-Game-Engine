@@ -2,15 +2,22 @@
 
 
 
+Texture::Texture()
+{
+}
+
+
+
 Texture::Texture(std::string fileName, unsigned int slot)
 	: slot_(slot)
 {
 	load(fileName);
 }
 
+
+
 Texture::~Texture()
 {
-	GLCall(glDeleteTextures(1, &id_));
 }
 
 
@@ -49,6 +56,8 @@ unsigned int Texture::getHeight() const
 	return height_;
 }
 
+
+
 unsigned int Texture::getSlot() const
 {
 	return slot_;
@@ -77,4 +86,9 @@ void Texture::load(std::string fileName)
 	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width_, height_, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels_));
 
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
+void Texture::deleteTex()
+{
+	GLCall(glDeleteTextures(1, &id_));
 }

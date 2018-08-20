@@ -12,22 +12,29 @@ Model::Model()
 
 
 
-void Model::setMesh(Mesh* mesh, GLenum drawMode)
+void Model::setMesh(Mesh* mesh)
 {
 	mesh_ = mesh;
-	drawMode_ = drawMode;
 }
 
 
 
 void Model::draw()
 {
-	shader_->setUniform("u_vw_matrix", camera_->getMatrix());
-	state_.calcModelMatrix(*shader_);
+	shader_->enable();
+	modelLight_->calcModelLightning(shader_);
+	shader_->setUniform("u_vw_matrix", camera_->calcLookAtMatrix());
+	state_.calcModelMatrix(shader_);
 	mesh_->draw();
+	shader_->disable();
 }
 
 
+
+void Model::setLightning(IModelLightning * modelLight)
+{
+	modelLight_ = modelLight;
+}
 
 void Model::setShader(Shader* shader)
 {
@@ -43,16 +50,16 @@ void Model::setCamera(Camera* camera)
 
 
 
-void Model::setDrawMode(GLenum drawMode)
+void Model::setPosition(const vec3& position)
 {
-	drawMode_ = drawMode;
+	state_.setPosition(position);
 }
 
 
 
-void Model::setPosition(const vec3& position)
+vec3 Model::getPosition() const
 {
-	state_.setPosition(position);
+	return state_.getPosition();
 }
 
 

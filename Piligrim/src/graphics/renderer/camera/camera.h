@@ -22,11 +22,18 @@ public:
 	void setPosZ(float z);
 	void setLookDir(vec3 lookDir);
 
+	void setFov(float fov);
+	void setNear(float near);
+	void setFar(float far);
+	void setRatio(float ratio);
+
 	vec3 getPosition() const;
 	vec3 getLookDir() const;
 	vec3 getRightDir() const;
 
-	mat4 getMatrix();
+	mat4 calcLookAtMatrix();
+	mat4 calcProjectionMatrix();
+
 	void lookAt(vec3 lookPoint);
 	void lookAt(float yaw, float pitch);
 
@@ -37,15 +44,23 @@ private:
 	vec3 backDir_;
 	vec3 rightDir_;
 	vec3 upDir_;
+
 	mat4 lookAtMatrix_;
+	mat4 projectionMatrix_;
+
+	float fovAngle_;
+	float nearPlane_;
+	float farPlane_;
+	float ratio_;
 
 	float yaw_;
 	float pitch_;
 	float sensitivity_;
 	float speed_;
 
-	bool isMatrixPositionOld_ = true;
-	bool isMatrixDirectionOld_ = true;
+	bool needCalcMatrixPosition_ = true;
+	bool needCalcMatrixDirection_ = true;
+	bool needCalcMatrixProjection_ = true;
 
 	ControlsTable* controlsTable_;
 

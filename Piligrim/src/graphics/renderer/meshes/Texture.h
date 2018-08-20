@@ -10,6 +10,7 @@
 class Texture
 {
 public:
+	Texture();
 	Texture(std::string fileName, unsigned int slot = 0);
 	~Texture();
 
@@ -24,6 +25,7 @@ public:
 	void setSlot(unsigned int slot);
 
 	void load(std::string fileName);
+	void deleteTex();
 
 private:
 	unsigned int slot_;

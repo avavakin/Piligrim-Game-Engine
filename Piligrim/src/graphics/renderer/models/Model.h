@@ -2,20 +2,24 @@
 
 #include "../camera/camera.h"
 
-#include "Mesh.h"
+#include "../meshes/Mesh.h"
+#include "../IDrawable.h"
+#include "IModelLightning.h"
 #include "ModelState.h"
 
 class Model : IDrawable
 {
 public:
 	Model();
-	void setMesh(Mesh* mesh, GLenum drawMode = GL_STATIC_DRAW);
-	void setDrawMode(GLenum drawMode);
+	void setMesh(Mesh* mesh);
 	void draw();
 
+	void setLightning(IModelLightning* modelLight);
 	void setShader(Shader* shader);
 	void setCamera(Camera* camera);
 	void setPosition(const vec3& position);
+
+	vec3 getPosition() const;
 
 	void rotate(const vec3& axis, float angle);
 	void scale(const vec3& scaleVec);
@@ -29,6 +33,6 @@ private:
 	Camera* camera_;
 
 	ModelState state_;
-	GLenum drawMode_;
+	IModelLightning* modelLight_;
 
 };
