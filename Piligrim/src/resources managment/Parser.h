@@ -1,12 +1,10 @@
 #pragma once
 #include <string>
-#include <list>
-#include <regex>
 
 #include "../utils/FileUtils.h"
 
-#include "../graphics/renderer/models/Mesh.h"
-#include "../graphics/renderer/models/Material.h"
+#include "../graphics/renderer/meshes/Mesh.h"
+#include "../graphics/renderer/shader/Material.h"
 
 
 
